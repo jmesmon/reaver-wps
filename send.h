@@ -48,5 +48,6 @@ int send_msg(int type);
 void send_termination(void);
 void send_wsc_nack(void);
 int send_packet(const void *packet, size_t len);
+int resend_packet();
 
 #endif
