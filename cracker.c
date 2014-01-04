@@ -32,6 +32,8 @@
  */
 
 #include "cracker.h"
+static time_t last_display = 0;
+static int last_attempts = 0;
 
 static int get_pin_count(void)
 {
@@ -43,14 +45,77 @@ static int get_pin_count(void)
 	return pin_count;
 }
 
+/* 
+ * Increment the index into the p1 or p2 array as appropriate.
+ * If we're still trying to brute force the first half, increment p1.
+ * If we're working on the second half, increment p2.
+ */
+static void advance_pin_count(void)
+{
+	if (get_key_status() == KEY1_WIP) {
+		set_p1_index(get_p1_index() + 1);
+	} else if (get_key_status() == KEY2_WIP) {
+		set_p2_index(get_p2_index() + 1);
+	}
+}
+
+/* Displays the status and rate of cracking */
+static void display_status(time_t start_time)
+{
+	float percentage;
+	int attempts;
+	time_t now, diff, expected, average;
+	struct tm tm;
+	char time_s[27];
+	int pin_count = get_pin_count();
+
+	if (get_key_status() == KEY1_WIP)
+		attempts = get_p1_index() + get_p2_index();
+	/*
+	 * If we've found the first half of the key, then the entire key1 keyspace
+	 * has been exhausted/eliminated. Our output should reflect that.
+	 */
+	else if (get_key_status() == KEY2_WIP) {
+		attempts = P1_SIZE + get_p2_index();
+	} else if (get_key_status() == KEY_DONE) {
+		attempts = get_max_pin_attempts();
+	}
+
+	percentage = (float) (((float) attempts / (get_max_pin_attempts())) * 100);
+
+	now = time(NULL);
+	localtime_r(&now, &tm);
+	asctime_r(&tm, time_s);
+	diff = (int) (now - start_time);
+
+	if (pin_count > 0) {
+		average = diff / pin_count;
+	} else {
+		average = 0;
+	}
+	cprintf(INFO, "[+] %.2f%% complete @ %s (%ld seconds/pin)\n", percentage,
+		time_s, (long)average);
+
+	if(diff > 0)
+		cprintf(INFO, "[+] %.2f%% complete. Elapsed time: %lds.\n", percentage, (long)diff);
+
+	if(last_display && attempts != last_attempts) {
+		expected = ((now - last_display)/(attempts - last_attempts)) * (get_max_pin_attempts() - attempts);
+		if(expected > 0)
+			cprintf(INFO, "[+] Estimated Remaining time: %lds\n", (long)expected);
+	}
+	last_display = now;
+	last_attempts = attempts;
+
+	return;
+}
+
 /* Brute force all possible WPS pins for a given access point */
 void crack(void)
 {
 	unsigned char *bssid = NULL;
 	char *pin = NULL;
-	int fail_count = 0, loop_count = 0, sleep_count = 0, assoc_fail_count =
-	    0;
-	float pin_count = 0;
+	int fail_count = 0, loop_count = 0, sleep_count = 0, assoc_fail_count = 0;
 	time_t start_time = 0;
 	enum wps_result result = 0;
 
@@ -121,6 +186,8 @@ void crack(void)
 		else if (get_key_status() == KEY_DONE) {
 			set_key_status(KEY2_WIP);
 		}
+
+        cprintf(INFO, "[+] Starting Cracking Session. Pin count: %i, Max pin attempts: %i\n", get_pin_count(), get_max_pin_attempts());
 
 		/* Main cracking loop */
 		for (loop_count = 0, sleep_count = 0;
@@ -203,15 +270,14 @@ void crack(void)
 			case KEY_REJECTED:
 				fail_count = 0;
 				advance_pin_count();
+				cprintf(WARNING, "[+] Pin count advanced: %i. Max pin attempts: %i\n", get_pin_count(), get_max_pin_attempts());
 				break;
 				/* Got it!! */
 			case KEY_ACCEPTED:
 				break;
 				/* Unexpected timeout or EAP failure...try this pin again */
 			default:
-				cprintf(VERBOSE,
-					"[!] WPS transaction failed (code: 0x%.2X), re-trying last pin\n",
-					result);
+				cprintf(WARNING, "[!] WPS transaction failed (code: 0x%.2X), re-trying last pin\n", result);
 				fail_count++;
 				break;
 			}
@@ -228,7 +294,7 @@ void crack(void)
 			/* Display status and save current session state every DISPLAY_PIN_COUNT loops */
 			if (loop_count == DISPLAY_PIN_COUNT) {
 				save_session();
-				display_status(pin_count, start_time);
+				display_status(start_time);
 				loop_count = 0;
 			}
 
@@ -270,62 +336,3 @@ void crack(void)
 	}
 }
 
-/* 
- * Increment the index into the p1 or p2 array as appropriate.
- * If we're still trying to brute force the first half, increment p1.
- * If we're working on the second half, increment p2.
- */
-void advance_pin_count(void)
-{
-	if (get_key_status() == KEY1_WIP) {
-		set_p1_index(get_p1_index() + 1);
-	} else if (get_key_status() == KEY2_WIP) {
-		set_p2_index(get_p2_index() + 1);
-	}
-}
-
-/* Displays the status and rate of cracking */
-void display_status(float pin_count, time_t start_time)
-{
-	float percentage = 0;
-	int attempts = 0, average = 0;
-	time_t now = 0, diff = 0;
-	struct tm *tm_p = NULL;
-	char time_s[256] = { 0 };
-
-	if (get_key_status() == KEY1_WIP) {
-		attempts = get_p1_index() + get_p2_index();
-	}
-	/* 
-	 * If we've found the first half of the key, then the entire key1 keyspace
-	 * has been exhausted/eliminated. Our output should reflect that.
-	 */
-	else if (get_key_status() == KEY2_WIP) {
-		attempts = P1_SIZE + get_p2_index();
-	} else if (get_key_status() == KEY_DONE) {
-		attempts = P1_SIZE + P2_SIZE;
-	}
-
-	percentage = (float)(((float)attempts / (P1_SIZE + P2_SIZE)) * 100);
-
-	now = time(NULL);
-	diff = now - start_time;
-
-	tm_p = localtime(&now);
-	if (tm_p) {
-		strftime(time_s, sizeof(time_s), TIME_FORMAT, tm_p);
-	} else {
-		perror("localtime");
-	}
-
-	if (pin_count > 0) {
-		average = (int)(diff / pin_count);
-	} else {
-		average = 0;
-	}
-
-	cprintf(INFO, "[+] %.2f%% complete @ %s (%d seconds/pin)\n", percentage,
-		time_s, average);
-
-	return;
-}

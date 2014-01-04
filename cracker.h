@@ -44,10 +44,9 @@
 #include "argsparser.h"
 
 #define DISPLAY_PIN_COUNT	5
-#define TIME_FORMAT		"%F %T"
+#define DATE_TIME_FORMAT	"%F %T"
+#define TIME_FORMAT			"%T"
 
 void crack(void);
-void advance_pin_count(void);
-void display_status(float pin_count, time_t start_time);
 
 #endif
