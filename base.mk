@@ -1,4 +1,4 @@
-## base.mk: b5774ee, see https://github.com/jmesmon/trifles.git
+## base.mk: a47cf30, see https://github.com/jmesmon/trifles.git
 # Usage:
 #
 # == Targets ==
@@ -299,12 +299,16 @@ $(O)/%.o : %.S $(O)/.TRACK-ASFLAGS
 	$(QUIET_AS)$(AS) -c $(ALL_ASFLAGS) $< -o $@
 
 ifndef NO_INSTALL
-PREFIX  ?= $(HOME)   # link against things here
-DESTDIR ?= $(PREFIX) # install into here
+# link against things here
+PREFIX  ?= $(HOME)
+# install into here
+DESTDIR ?= $(PREFIX)
+# binarys go here
 BINDIR  ?= $(DESTDIR)/bin
 .PHONY: install %.install
 %.install: %
-	install $* $(BINDIR)/$*
+	mkdir -p $(BINDIR)
+	install $* $(BINDIR)
 install: $(foreach target,$(TARGETS),$(target).install)
 endif
 

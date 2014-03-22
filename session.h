@@ -42,7 +42,7 @@
 #include "sql.h"
 
 #ifndef CONF_DIR
-#define CONF_DIR	"/etc/reaver"
+#error "CONF_DIR must be defined (please make this configurable at run time)"
 #endif
 
 #define MAX_LINE_SIZE	128
