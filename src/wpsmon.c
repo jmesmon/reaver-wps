@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 	int source = INTERFACE, ret_val = EXIT_FAILURE;
 	struct bpf_program bpf = { 0 };
 	char *out_file = NULL, *last_optarg = NULL, *target = NULL, *bssid = NULL;
-	char *short_options = "i:c:n:o:b:5sfuCDh";
+	char *short_options = "i:c:n:o:b:5sfuCDhv";
         struct option long_options[] = {
 		{ "bssid", required_argument, NULL, 'b' },
                 { "interface", required_argument, NULL, 'i' },
@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
 		{ "scan", no_argument, NULL, 's' },
 		{ "survey", no_argument, NULL, 'u' },
                 { "help", no_argument, NULL, 'h' },
+		{ "verbose", no_argument, NULL, 'v'},
                 { 0, 0, 0, 0 }
         };
 
@@ -109,6 +110,9 @@ int main(int argc, char *argv[])
 			case 'D':
 				daemonize();
 				break;
+                        case 'v':
+                                set_debug(get_debug() + 1);
+                                break;
 			default:
 				usage(argv[0]);
 				goto end;
@@ -174,6 +178,7 @@ int main(int argc, char *argv[])
 		/* If the source is a pcap file, get the file name from the command line */
 		if(source == PCAP_FILE)
 		{
+			cprintf(VERBOSE, "[V]: using PCAP file\n");
 			/* If we've gotten to the arguments, we're done */
 			if((argv[i][0] == '-') ||
 			   (last_optarg && (memcmp(argv[i], last_optarg, strlen(last_optarg)) == 0))
@@ -189,6 +194,7 @@ int main(int argc, char *argv[])
 		/* Else, use the specified interface name */
 		else
 		{
+			cprintf(VERBOSE, "[V]: using physical iface\n");
 			target = get_iface();
 		}
 
@@ -204,7 +210,7 @@ int main(int argc, char *argv[])
 			cprintf(CRITICAL, "[X] ERROR: Failed to compile packet filter\n");
 			goto end;
 		}
-		
+
 		if(pcap_setfilter(get_handle(), &bpf) != 0)
 		{
 			cprintf(CRITICAL, "[X] ERROR: Failed to set packet filter\n");
@@ -212,7 +218,9 @@ int main(int argc, char *argv[])
 		}
 
 		/* Do it. */
+		cprintf(VERBOSE, "[V]: beginning monitor...\n");
 		monitor(bssid, passive, source, channel, mode);
+		cprintf(VERBOSE, "[V]: monitor exited\n");
 		printf("\n");
 	}
 
