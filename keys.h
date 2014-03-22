@@ -38,7 +38,7 @@
 
 struct key
 {
-        char *key;
+        const char *key;
         int priority;
 };
 
