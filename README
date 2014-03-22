@@ -10,3 +10,5 @@ TODO:
 
 	look at the changes made by https://github.com/bdpurcell/bully and port them
 	use ccan instead of some of the stuff in utils/ and wpa/wpabuf
+
+	examine making keys.c a text file we load at runtime. Or at least generate that at build time.
