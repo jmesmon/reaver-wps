@@ -1,0 +1,12 @@
+TODO:
+	remove unused source files
+	flatten build system (get rid of sub-makes)
+	make CONF_DIR runtime configurable. Default to somewhere in $HOME.
+	figure out if we really need sqlite3 or can just use some files in directories.
+	Fix all the warnings/errors
+	Switch internal code to common external libs
+		- bignum -> gmp
+		- ...
+
+	look at the changes made by https://github.com/bdpurcell/bully and port them
+	use ccan instead of some of the stuff in utils/ and wpa/wpabuf
