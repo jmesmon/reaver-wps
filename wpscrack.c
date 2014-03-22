@@ -31,6 +31,7 @@
  *  files in the program, then also delete it here.
  */
 
+#include "config.h"
 #include "wpscrack.h"
 
 int main(int argc, char **argv)

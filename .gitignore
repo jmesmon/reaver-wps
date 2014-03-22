@@ -1,0 +1,16 @@
+*.[oa]
+.*.d
+.TRACK-*
+
+
+
+lwe/ifrename
+lwe/iwconfig
+lwe/iwevent
+lwe/iwgetid
+lwe/iwlist
+lwe/iwpriv
+lwe/iwspy
+lwe/libiw.so.29
+lwe/iwlib.so
+lwe/wireless.h
