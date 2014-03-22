@@ -1,14 +1,14 @@
 
 CONFDIR=$(HOME)/var/reaver
 
-obj-wps    = $(addprefix wps/,wps_attr_build.o wps_attr_parse.o
-		wps_attr_process.o wps.o wps_common.o wps_dev_attr.o
+obj-wps    = $(addprefix wps/,wps_attr_build.o wps_attr_parse.o		\
+		wps_attr_process.o wps.o wps_common.o wps_dev_attr.o	\
 		wps_enrollee.o wps_registrar.o wps_ufd.o)
-obj-utils  = $(addprefix utils/,base64.o common.o eloop.o ip_addr.o os_unix.o
+obj-utils  = $(addprefix utils/,base64.o common.o eloop.o ip_addr.o os_unix.o	\
 		radiotap.o trace.o uuid.o wpabuf.o wpa_debug.o)
-obj-common = $(obj-wps) $(obj-utils) crypto/libcrypto.a tls/libtls.a
-		lwe/libiw.a libwps.o argsparser.o globule.o init.o sigint.o
-		sigalrm.o misc.o cracker.o 80211.o iface.o crc.o builder.o
+obj-common = $(obj-wps) $(obj-utils) crypto/libcrypto.a tls/libtls.a		\
+		lwe/libiw.a libwps.o argsparser.o globule.o init.o sigint.o	\
+		sigalrm.o misc.o cracker.o 80211.o iface.o crc.o builder.o	\
 		session.o pins.o keys.o sql.o exchange.o send.o
 
 obj-reaver = $(obj-common) wpscrack.o
