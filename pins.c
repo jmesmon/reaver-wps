@@ -34,7 +34,7 @@
 #include "pins.h"
 
 /* Builds a WPS PIN from the key tables */
-char *build_wps_pin()
+char *build_wps_pin(void)
 {
         char *key = NULL, *pin = NULL;
         int pin_len = PIN_SIZE + 1;
@@ -62,7 +62,7 @@ char *build_wps_pin()
  * Remove the last WPS pin (if any), build the next WPS pin in the p1 and p2 arrays, 
  * and populate the wps structure with the new pin.
  */
-char *build_next_pin()
+char *build_next_pin(void)
 {
         char *pin = NULL;
         struct wps_data *wps = get_wps();
@@ -86,7 +86,7 @@ char *build_next_pin()
 }
 
 /* Generate the p1 and p2 pin arrays */
-void generate_pins()
+void generate_pins(void)
 {
         int i = 0, index = 0;
 
