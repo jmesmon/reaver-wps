@@ -34,7 +34,7 @@
 #include "exchange.h"
 
 /* Main loop to listen for packets on a wireless card in monitor mode. */
-enum wps_result do_wps_exchange()
+enum wps_result do_wps_exchange(void)
 {
 	struct pcap_pkthdr header;
 	const u_char *packet = NULL;
