@@ -40,8 +40,8 @@
 
 #define PIN_SIZE	8
 
-char *build_wps_pin();
-char *build_next_pin();
-void generate_pins();
+char *build_wps_pin(void);
+char *build_next_pin(void);
+void generate_pins(void);
 
 #endif

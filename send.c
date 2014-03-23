@@ -34,7 +34,7 @@
 #include "send.h"
 
 /* Initiate the WPS session with an EAPOL START packet */
-int send_eapol_start()
+int send_eapol_start(void)
 {
 	const void *packet = NULL;
 	size_t packet_len = 0;
@@ -65,7 +65,7 @@ int send_eapol_start()
 }
 
 /* Send an identity response packet */
-int send_identity_response()
+int send_identity_response(void)
 {
 	const void *packet = NULL, *identity = NULL;
 	size_t packet_len = 0;
@@ -131,7 +131,7 @@ int send_msg(int type)
  * Send a WSC_NACK message followed by an EAP failure packet.
  * This is only called when completely terminating a cracking session.
  */
-void send_termination()
+void send_termination(void)
 {
 	const void *data = NULL;
 	size_t data_size = 0;
@@ -145,7 +145,7 @@ void send_termination()
 }
 
 /* Send a WSC_NACK message */
-void send_wsc_nack()
+void send_wsc_nack(void)
 {
 	struct wps_data *wps = get_wps();
 
