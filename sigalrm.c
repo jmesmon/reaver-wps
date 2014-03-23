@@ -34,7 +34,7 @@
 #include "sigalrm.h"
 
 /* Initializes SIGALRM handler */
-void sigalrm_init()
+void sigalrm_init(void)
 {
         struct sigaction act;
 
@@ -45,7 +45,7 @@ void sigalrm_init()
 }
 
 /* Starts receive timer. Called from send_packet() after a packet is trasmitted */
-void start_timer()
+void start_timer(void)
 {
         struct itimerval timer;
 	struct wps_data *wps = get_wps();
@@ -80,7 +80,7 @@ void start_timer()
 }
 
 /* Timer is stopped by process_packet() when any valid EAP packet is received */
-void stop_timer()
+void stop_timer(void)
 {
         struct itimerval timer;
 
