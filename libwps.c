@@ -9,6 +9,7 @@
  * See README and LICENSE for more details.
  */
 
+#define ARRAY_SIZE(x) (sizeof(x)/sizeof(x[0]))
 #define LIBWPS_C
 
 #include "libwps.h"
@@ -83,7 +84,7 @@ int parse_wps_tag(const u_char *tags, size_t len, struct libwps_data *wps)
 
 	if(wps_ie_data)
 	{
-		for(i=0; i<sizeof(elements); i++)
+		for(i = 0; i < ARRAY_SIZE(elements); i++)
 		{
 			/* Search for each WPS element inside the WPS IE data blob */
 			el = get_wps_data_element(wps_ie_data, wps_data_len, elements[i], &el_len);
