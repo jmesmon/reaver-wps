@@ -290,7 +290,8 @@ void parse_wps_settings(const u_char *packet, struct pcap_pkthdr *header, char *
 	struct dot11_frame_header *frame_header = NULL;
 	struct libwps_data *wps = NULL;
 	enum encryption_type encryption = NONE;
-	char *bssid = NULL, *ssid = NULL, *lock_display = NULL;
+	char *bssid = NULL, *ssid = NULL;
+	const char *lock_display = NULL;
 	int wps_parsed = 0, probe_sent = 0, channel = 0, rssi = 0;
 	static int channel_changed = 0;
 
