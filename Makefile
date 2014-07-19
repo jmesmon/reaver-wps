@@ -7,7 +7,7 @@ obj-wps    = $(addprefix wps/,wps_attr_build.o wps_attr_parse.o		\
 obj-utils  = $(addprefix utils/,base64.o common.o eloop.o ip_addr.o os_unix.o	\
 		radiotap.o trace.o uuid.o wpabuf.o wpa_debug.o)
 obj-common = $(obj-wps) $(obj-utils) crypto/libcrypto.a tls/libtls.a		\
-		lwe/libiw.a libwps.o argsparser.o globule.o init.o sigint.o	\
+		libwps.o argsparser.o globule.o init.o sigint.o	\
 		sigalrm.o misc.o cracker.o 80211.o iface.o crc.o builder.o	\
 		session.o pins.o keys.o sql.o exchange.o send.o
 
@@ -21,17 +21,19 @@ SQLITE3_LDFLAGS = -lsqlite3
 PCAP_LDFLAGS = -lpcap
 PCAP_CFLAGS  =
 
-ALL_CFLAGS += -Ilibwps -I. -Iutils -DCONF_DIR="\"$(CONFDIR)\""
+LIBIW_CFLAGS =
+LIBIW_LDFLAGS = -liw
+
+ALL_CFLAGS  += -I. -Iutils -DCONF_DIR="\"$(CONFDIR)\""
 ALL_LDFLAGS += -lm
 
-ALL_CFLAGS  += $(PCAP_CFLAGS)  $(SQLITE3_CFLAGS)
-ALL_LDFLAGS += $(PCAP_LDFLAGS) $(SQLITE3_LDFLAGS)
+ALL_CFLAGS  += $(PCAP_CFLAGS)  $(SQLITE3_CFLAGS)  $(LIBIW_CFLAGS)
+ALL_LDFLAGS += $(PCAP_LDFLAGS) $(SQLITE3_LDFLAGS) $(LIBIW_LDFLAGS)
 
 include base.mk
 
 $(eval $(call sub-make,tls/libtls.a))
 $(eval $(call sub-make,crypto/libcrypto.a))
-$(eval $(call sub-make,lwe/libiw.a,BUILD_STATIC=yes))
 
 install: reaver.db
 	mkdir -p $(CONFDIR); \

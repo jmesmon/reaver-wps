@@ -37,7 +37,7 @@
 #include <sys/ioctl.h>
 #include <net/if.h>
 #include <netinet/in.h>
-#include "lwe/iwlib.h"
+#include <iwlib.h>
 
 #include "defs.h"
 #include "globule.h"
