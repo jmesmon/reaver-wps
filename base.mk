@@ -1,4 +1,4 @@
-## base.mk: 66f4a14, see https://github.com/jmesmon/trifles.git
+## base.mk: f7dbb59, see https://github.com/jmesmon/trifles.git
 # Usage:
 #
 # == Targets ==
@@ -100,6 +100,9 @@ O = .
 O_ = $(O)
 BIN_TARGETS=$(addprefix $(O_)/,$(addsuffix $(BIN_EXT),$(TARGETS)))
 
+# link against things here
+PREFIX  ?= $(HOME)
+
 .PHONY: all FORCE
 all:: $(BIN_TARGETS)
 
@@ -125,6 +128,25 @@ $(call var-def,RM,rm -f)
 $(call var-def,FLEX,flex)
 $(call var-def,BISON,bison)
 
+
+IS_CLANG := $(shell echo | $(CC) -v 2>&1 | head -n1 | grep -q '^clang' && echo 1 || echo 0)
+IS_GCC   := $(shell echo | $(CC) -v 2>&1 | tail -n1 | grep -q '^gcc'   && echo 1 || echo 0)
+
+ifeq ($(IS_CLANG),1)
+CC_TYPE ?= clang
+endif
+ifeq ($(IS_GCC),1)
+CC_TYPE ?= gcc
+endif
+
+show-cc_type:
+	@echo $(CC_TYPE)
+
+CC_PREFIX = $(patsubst %gcc,%,$(CC))
+
+show-cc_prefix:
+	@echo $(CC_PREFIX)
+
 show-cc:
 	@echo $(CC)
 
@@ -139,18 +161,17 @@ ifndef NO_SANITIZE
 DBG_FLAGS += -fsanitize=address
 endif
 
-CC_TYPE ?= gcc
-
-CC_TYPE=
-
 ifndef NO_LTO
 # TODO: use -flto=jobserver
 ifeq ($(CC_TYPE),gcc)
+$(call var-def,AR,$(CC_PREFIX)gcc-ar)
+$(call var-def,RANLIB,$(CC_PREFIX)gcc-ranlib)
+$(call var-def,NM,$(CC_PREFIX)-gcc-nm)
 CFLAGS  ?= -flto $(DBG_FLAGS)
 LDFLAGS ?= $(ALL_CFLAGS) $(OPT) -fuse-linker-plugin
 else ifeq ($(CC_TYPE),clang)
-LDFLAGS ?= $(OPT)
 CFLAGS  ?= -emit-llvm $(DBG_FLAGS)
+LDFLAGS ?= $(OPT)
 endif
 else
 CFLAGS  ?= $(OPT) $(DBG_FLAGS)
@@ -176,7 +197,7 @@ C_CFLAGS += -Wbad-function-cast
 # -Wnormalized=id		not supported by clang
 # -Wunsafe-loop-optimizations	not supported by clang
 
-ALL_CFLAGS += -std=gnu99
+ALL_CFLAGS += -std=gnu11
 
 ALL_CPPFLAGS += $(CPPFLAGS)
 
@@ -200,7 +221,7 @@ ALL_ASFLAGS += $(ASFLAGS)
 
 # FIXME: need to exclude '-I', '-l', '-L' options
 # - potentially seperate those flags from ALL_*?
-MAKE_ENV = CC="$(CC)" CCLD="$(CCLD)" AS="$(AS)" CXX="$(CXX)"
+MAKE_ENV = CC="$(CC)" CCLD="$(CCLD)" AS="$(AS)" CXX="$(CXX)" AR="$(AR)" RANLIB="$(RANLIB)" NM="$(NM)"
          # CFLAGS="$(ALL_CFLAGS)" \
 	   LDFLAGS="$(ALL_LDFLAGS)" \
 	   CXXFLAGS="$(ALL_CXXFLAGS)" \
@@ -307,8 +328,6 @@ $(O_)/%.o : %.S $(O_)/.TRACK-ASFLAGS
 	$(QUIET_AS)$(AS) -c $(ALL_ASFLAGS) $< -o $@
 
 ifndef NO_INSTALL
-# link against things here
-PREFIX  ?= $(HOME)
 # install into here
 DESTDIR ?= $(PREFIX)
 # binarys go here
