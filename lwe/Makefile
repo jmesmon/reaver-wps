@@ -8,12 +8,6 @@ ifndef PREFIX
   PREFIX = /usr/local
 endif
 
-## Compiler to use (modify this for cross compile).
-CC = gcc
-## Other tools you need to modify for cross compile (static lib only).
-AR = ar
-RANLIB = ranlib
-
 ## Uncomment this to build tools using static version of the library.
 ## Mostly useful for embedded platforms without ldd, or to create
 ## a local version (non-root).
