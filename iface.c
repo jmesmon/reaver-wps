@@ -34,7 +34,7 @@
 #include "iface.h"
 
 /* Populates globule->mac with the MAC address of the interface globule->iface */
-int read_iface_mac()
+int read_iface_mac(void)
 {
 	struct ifreq ifr;
 	struct ether_addr *eth = NULL;
@@ -75,7 +75,7 @@ int read_iface_mac()
  * We just hop channels until we successfully associate with the AP.
  * The AP's actual channel number is parsed and set by parse_beacon_tags() in 80211.c.
  */
-int next_channel()
+int next_channel(void)
 {
         static int i;
 	int n = 0;
