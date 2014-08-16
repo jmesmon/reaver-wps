@@ -5,6 +5,7 @@ TODO:
 	Fix all the warnings/errors
 	Switch internal code to common external libs
 		- bignum -> gmp
+		- tommath excerpt to libtommath
 		- ...
 
 	use ccan instead of some of the stuff in utils/ and wpa/wpabuf
