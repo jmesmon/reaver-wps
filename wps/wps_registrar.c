@@ -251,29 +251,6 @@ static void wps_registrar_add_pbc_session(struct wps_registrar *reg,
 	}
 }
 
-
-static void wps_registrar_remove_pbc_session(struct wps_registrar *reg,
-					     const u8 *addr, const u8 *uuid_e)
-{
-	struct wps_pbc_session *pbc, *prev = NULL;
-
-	pbc = reg->pbc_sessions;
-	while (pbc) {
-		if (os_memcmp(pbc->addr, addr, ETH_ALEN) == 0 &&
-		    os_memcmp(pbc->uuid_e, uuid_e, WPS_UUID_LEN) == 0) {
-			if (prev)
-				prev->next = pbc->next;
-			else
-				reg->pbc_sessions = pbc->next;
-			os_free(pbc);
-			break;
-		}
-		prev = pbc;
-		pbc = pbc->next;
-	}
-}
-
-
 static int wps_registrar_pbc_overlap(struct wps_registrar *reg,
 				     const u8 *addr, const u8 *uuid_e)
 {
@@ -297,7 +274,6 @@ static int wps_registrar_pbc_overlap(struct wps_registrar *reg,
 
 	return count > 1 ? 1 : 0;
 }
-
 
 static int wps_build_wps_state(struct wps_context *wps, struct wpabuf *msg)
 {
@@ -753,30 +729,6 @@ int wps_registrar_button_pushed(struct wps_registrar *reg)
 	return 0;
 }
 
-
-static void wps_registrar_pbc_completed(struct wps_registrar *reg)
-{
-	if(reg != NULL)
-	{
-		wpa_printf(MSG_DEBUG, "WPS: PBC completed - stopping PBC mode");
-		eloop_cancel_timeout(wps_registrar_pbc_timeout, reg, NULL);
-		wps_registrar_stop_pbc(reg);
-	}
-}
-
-
-static void wps_registrar_pin_completed(struct wps_registrar *reg)
-{
-	if(reg != NULL)
-	{
-		wpa_printf(MSG_DEBUG, "WPS: PIN completed using internal Registrar");
-		eloop_cancel_timeout(wps_registrar_set_selected_timeout, reg, NULL);
-		reg->selected_registrar = 0;
-		wps_registrar_selected_registrar_changed(reg);
-	}
-}
-
-
 /**
  * wps_registrar_probe_req_rx - Notify Registrar of Probe Request
  * @reg: Registrar data from wps_registrar_init()
@@ -856,20 +808,6 @@ void wps_registrar_probe_req_rx(struct wps_registrar *reg, const u8 *addr,
 	}
 }
 
-
-static int wps_cb_new_psk(struct wps_registrar *reg, const u8 *mac_addr,
-			  const u8 *psk, size_t psk_len)
-{
-	if(reg == NULL)
-		return 0;
-
-	if (reg->new_psk_cb == NULL)
-		return 0;
-
-	return reg->new_psk_cb(reg->cb_ctx, mac_addr, psk, psk_len);
-}
-
-
 static void wps_cb_pin_needed(struct wps_registrar *reg, const u8 *uuid_e,
 			      const struct wps_device_data *dev)
 {
@@ -881,20 +819,6 @@ static void wps_cb_pin_needed(struct wps_registrar *reg, const u8 *uuid_e,
 
 	reg->pin_needed_cb(reg->cb_ctx, uuid_e, dev);
 }
-
-
-static void wps_cb_reg_success(struct wps_registrar *reg, const u8 *mac_addr,
-			       const u8 *uuid_e)
-{
-	if(reg == NULL)
-		return;
-
-	if (reg->reg_success_cb == NULL)
-		return;
-
-	reg->reg_success_cb(reg->cb_ctx, mac_addr, uuid_e);
-}
-
 
 static int wps_cb_set_ie(struct wps_registrar *reg, struct wpabuf *beacon_ie,
 			 struct wpabuf *probe_resp_ie)
@@ -1425,44 +1349,6 @@ static struct wpabuf * wps_build_m2(struct wps_data *wps)
 	return msg;
 }
 
-
-static struct wpabuf * wps_build_m2d(struct wps_data *wps)
-{
-	struct wpabuf *msg;
-	u16 err = wps->config_error;
-
-	wpa_printf(MSG_DEBUG, "WPS: Building Message M2D");
-	msg = wpabuf_alloc(1000);
-	if (msg == NULL)
-		return NULL;
-
-	if (wps->wps->ap && wps->wps->ap_setup_locked &&
-	    err == WPS_CFG_NO_ERROR)
-		err = WPS_CFG_SETUP_LOCKED;
-
-	if (wps_build_version(msg) ||
-	    wps_build_msg_type(msg, WPS_M2D) ||
-	    wps_build_enrollee_nonce(wps, msg) ||
-	    wps_build_registrar_nonce(wps, msg) ||
-	    wps_build_uuid_r(wps, msg) ||
-	    wps_build_auth_type_flags(wps, msg) ||
-	    wps_build_encr_type_flags(wps, msg) ||
-	    wps_build_conn_type_flags(wps, msg) ||
-	    wps_build_config_methods_r(wps->wps->registrar, msg) ||
-	    wps_build_device_attrs(&wps->wps->dev, msg) ||
-	    wps_build_rf_bands(&wps->wps->dev, msg) ||
-	    wps_build_assoc_state(wps, msg) ||
-	    wps_build_config_error(msg, err) ||
-	    wps_build_os_version(&wps->wps->dev, msg)) {
-		wpabuf_free(msg);
-		return NULL;
-	}
-
-	wps->state = RECV_M2D_ACK;
-	return msg;
-}
-
-
 static struct wpabuf * wps_build_m4(struct wps_data *wps)
 {
 	struct wpabuf *msg, *plain;
@@ -1809,50 +1695,6 @@ static int wps_process_e_snonce1(struct wps_data *wps, const u8 *e_snonce1)
 
 	return 0;
 }
-
-
-static int wps_process_e_snonce2(struct wps_data *wps, const u8 *e_snonce2)
-{
-	u8 hash[SHA256_MAC_LEN];
-	const u8 *addr[4];
-	size_t len[4];
-
-	if (e_snonce2 == NULL) {
-		wpa_printf(MSG_DEBUG, "WPS: No E-SNonce2 received");
-		return -1;
-	}
-
-	wpa_hexdump_key(MSG_DEBUG, "WPS: E-SNonce2", e_snonce2,
-			WPS_SECRET_NONCE_LEN);
-
-	/* E-Hash2 = HMAC_AuthKey(E-S2 || PSK2 || PK_E || PK_R) */
-	addr[0] = e_snonce2;
-	len[0] = WPS_SECRET_NONCE_LEN;
-	addr[1] = wps->psk2;
-	len[1] = WPS_PSK_LEN;
-	addr[2] = wpabuf_head(wps->dh_pubkey_e);
-	len[2] = wpabuf_len(wps->dh_pubkey_e);
-	addr[3] = wpabuf_head(wps->dh_pubkey_r);
-	len[3] = wpabuf_len(wps->dh_pubkey_r);
-	hmac_sha256_vector(wps->authkey, WPS_AUTHKEY_LEN, 4, addr, len, hash);
-
-	if (os_memcmp(wps->peer_hash2, hash, WPS_HASH_LEN) != 0) {
-		wpa_printf(MSG_DEBUG, "WPS: E-Hash2 derived from E-S2 does "
-			   "not match with the pre-committed value");
-		wps_registrar_invalidate_pin(wps->wps->registrar, wps->uuid_e);
-		wps->config_error = WPS_CFG_DEV_PASSWORD_AUTH_FAILURE;
-		wps_pwd_auth_fail_event(wps->wps, 0, 2);
-		return -1;
-	}
-
-	wpa_printf(MSG_DEBUG, "WPS: Enrollee proved knowledge of the second "
-		   "half of the device password");
-	wps->wps_pin_revealed = 0;
-	wps_registrar_unlock_pin(wps->wps->registrar, wps->uuid_e);
-
-	return 0;
-}
-
 
 static int wps_process_mac_addr(struct wps_data *wps, const u8 *mac_addr)
 {
@@ -2316,13 +2158,9 @@ static int wps_process_ap_settings_r(struct wps_data *wps,
 
 	/* @@@ Save a copy of the network key and ssid directly to the wps_data structure @@@ */
 	if(wps->cred.key_len > 0)
-	{
-		wps->key = strdup(wps->cred.key);
-	}
+		wps->key = strdup((char *)wps->cred.key);
 	if(wps->cred.ssid_len > 0)
-	{
-		wps->essid = strdup(wps->cred.ssid);
-	}
+		wps->essid = strdup((char *)wps->cred.ssid);
 
 	if (wps->new_ap_settings) {
 		wpa_printf(MSG_INFO, "WPS: Update AP configuration based on "
