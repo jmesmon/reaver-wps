@@ -34,7 +34,7 @@
 #include "sigint.h"
 
 /* Initializes SIGINT handler */
-void sigint_init()
+void sigint_init(void)
 {
 	struct sigaction act;
 

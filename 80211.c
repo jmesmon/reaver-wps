@@ -65,7 +65,7 @@ const u_char *next_packet(struct pcap_pkthdr *header)
  * Waits for a beacon packet from the target AP and populates the globule->ap_capabilities field.
  * This is used for obtaining the capabilities field and AP SSID.
  */
-void read_ap_beacon()
+void read_ap_beacon(void)
 {
         struct pcap_pkthdr header;
         const u_char *packet = NULL;
@@ -176,7 +176,7 @@ int8_t signal_strength(const u_char *packet, size_t len)
  * Determines if the target AP has locked its WPS state or not.
  * Returns 0 if not locked, 1 if locked.
  */
-int is_wps_locked()
+int is_wps_locked(void)
 {
 	int locked = 0;
 	struct libwps_data wps = { 0 };
@@ -388,7 +388,7 @@ void associate(void)
 }
 
 /* Waits for authentication and association responses from the target AP */
-int associate_recv_loop()
+int associate_recv_loop(void)
 {
 	struct pcap_pkthdr header;
         const u_char *packet = NULL;

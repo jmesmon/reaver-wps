@@ -34,7 +34,7 @@
 #include "cracker.h"
 
 /* Brute force all possible WPS pins for a given access point */
-void crack()
+void crack(void)
 {
 	unsigned char *bssid = NULL;
 	char *pin = NULL;
@@ -273,7 +273,7 @@ void crack()
  * If we're still trying to brute force the first half, increment p1.
  * If we're working on the second half, increment p2.
  */
-void advance_pin_count()
+void advance_pin_count(void)
 {
 	if(get_key_status() == KEY1_WIP)
 	{
