@@ -33,7 +33,7 @@
 
 #include "session.h"
 
-int restore_session()
+int restore_session(void)
 {
 	struct stat wpstat = { 0 };
 	char line[MAX_LINE_SIZE] = { 0 };
@@ -162,7 +162,7 @@ int restore_session()
 	return ret_val;
 }
 
-int save_session()
+int save_session(void)
 {
 	unsigned char *bssid = NULL;
 	char *wpa_key = NULL, *essid = NULL, *pretty_bssid = NULL;
@@ -298,7 +298,7 @@ int save_session()
 }
 
 /* Does the configuration directory exist? Returns 1 for yes, 0 for no. */
-int configuration_directory_exists()
+int configuration_directory_exists(void)
 {
 	struct stat dirstat = { 0 };
 	int retval = 0;
