@@ -66,7 +66,7 @@ struct wps_data * wps_init(const struct wps_config *cfg)
 			os_free(data);
 			return NULL;
 		}
-		os_memset(data->dev_password, '0', 8);
+		memset(data->dev_password, '0', 8);
 		data->dev_password_len = 8;
 	}
 

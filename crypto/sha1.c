@@ -63,7 +63,7 @@ int hmac_sha1_vector(const u8 *key, size_t key_len, size_t num_elem,
 	 * and text is the data being protected */
 
 	/* start out by storing key in ipad */
-	os_memset(k_pad, 0, sizeof(k_pad));
+	memset(k_pad, 0, sizeof(k_pad));
 	os_memcpy(k_pad, key, key_len);
 	/* XOR key with ipad values */
 	for (i = 0; i < 64; i++)
@@ -79,7 +79,7 @@ int hmac_sha1_vector(const u8 *key, size_t key_len, size_t num_elem,
 	if (sha1_vector(1 + num_elem, _addr, _len, mac))
 		return -1;
 
-	os_memset(k_pad, 0, sizeof(k_pad));
+	memset(k_pad, 0, sizeof(k_pad));
 	os_memcpy(k_pad, key, key_len);
 	/* XOR key with opad values */
 	for (i = 0; i < 64; i++)

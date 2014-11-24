@@ -370,7 +370,7 @@ void tls_connection_deinit(void *ssl_ctx, struct tls_connection *conn)
 	if (conn->iacred_cli)
 		gnutls_ia_free_client_credentials(conn->iacred_cli);
 	if (conn->session_keys) {
-		os_memset(conn->session_keys, 0, conn->session_keys_len);
+		memset(conn->session_keys, 0, conn->session_keys_len);
 		os_free(conn->session_keys);
 	}
 #endif /* GNUTLS_IA */
@@ -410,7 +410,7 @@ int tls_connection_shutdown(void *ssl_ctx, struct tls_connection *conn)
 	conn->final_phase_finished = 0;
 #ifdef GNUTLS_IA
 	if (conn->session_keys) {
-		os_memset(conn->session_keys, 0, conn->session_keys_len);
+		memset(conn->session_keys, 0, conn->session_keys_len);
 		os_free(conn->session_keys);
 	}
 	conn->session_keys_len = 0;
@@ -820,7 +820,7 @@ int tls_connection_get_keys(void *ssl_ctx, struct tls_connection *conn,
 	if (conn == NULL || conn->session == NULL || keys == NULL)
 		return -1;
 
-	os_memset(keys, 0, sizeof(*keys));
+	memset(keys, 0, sizeof(*keys));
 
 #ifdef GNUTLS_INTERNAL_STRUCTURE_HACK
 	sec = &conn->session->security_parameters;
@@ -1184,7 +1184,7 @@ struct wpabuf * tls_connection_decrypt(void *tls_ctx,
 				conn->session, conn->session_keys_len,
 				(char *) conn->session_keys);
 			if (conn->session_keys) {
-				os_memset(conn->session_keys, 0,
+				memset(conn->session_keys, 0,
 					  conn->session_keys_len);
 				os_free(conn->session_keys);
 			}
@@ -1380,7 +1380,7 @@ struct wpabuf * tls_connection_ia_send_phase_finished(
 					     conn->session_keys_len,
 					     (char *) conn->session_keys);
 	if (conn->session_keys) {
-		os_memset(conn->session_keys, 0, conn->session_keys_len);
+		memset(conn->session_keys, 0, conn->session_keys_len);
 		os_free(conn->session_keys);
 	}
 	conn->session_keys = NULL;
@@ -1426,7 +1426,7 @@ int tls_connection_ia_permute_inner_secret(void *tls_ctx,
 		return -1;
 
 	if (conn->session_keys) {
-		os_memset(conn->session_keys, 0, conn->session_keys_len);
+		memset(conn->session_keys, 0, conn->session_keys_len);
 		os_free(conn->session_keys);
 	}
 	conn->session_keys_len = 0;

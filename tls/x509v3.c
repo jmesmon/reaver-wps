@@ -40,7 +40,7 @@ static void x509_free_name(struct x509_name *name)
 	name->alt_email = name->dns = name->uri = NULL;
 	name->ip = NULL;
 	name->ip_len = 0;
-	os_memset(&name->rid, 0, sizeof(name->rid));
+	memset(&name->rid, 0, sizeof(name->rid));
 }
 
 

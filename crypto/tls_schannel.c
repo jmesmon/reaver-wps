@@ -498,7 +498,7 @@ struct wpabuf * tls_connection_encrypt(void *tls_ctx,
 	out = wpabuf_alloc(sizes.cbHeader + wpabuf_len(in_data) +
 			   sizes.cbTrailer);
 
-	os_memset(&bufs, 0, sizeof(bufs));
+	memset(&bufs, 0, sizeof(bufs));
 	bufs[0].pvBuffer = wpabuf_put(out, sizes.cbHeader);
 	bufs[0].cbBuffer = sizes.cbHeader;
 	bufs[0].BufferType = SECBUFFER_STREAM_HEADER;
@@ -565,7 +565,7 @@ struct wpabuf * tls_connection_decrypt(void *tls_ctx,
 
 	wpa_hexdump_buf(MSG_MSGDUMP,
 			"Schannel: Encrypted data to DecryptMessage", in_data);
-	os_memset(&bufs, 0, sizeof(bufs));
+	memset(&bufs, 0, sizeof(bufs));
 	tmp = wpabuf_dup(in_data);
 	if (tmp == NULL)
 		return NULL;
@@ -706,7 +706,7 @@ int tls_connection_set_params(void *tls_ctx, struct tls_connection *conn,
 		return -1;
 	}
 
-	os_memset(&conn->schannel_cred, 0, sizeof(conn->schannel_cred));
+	memset(&conn->schannel_cred, 0, sizeof(conn->schannel_cred));
 	conn->schannel_cred.dwVersion = SCHANNEL_CRED_VERSION;
 	conn->schannel_cred.grbitEnabledProtocols = SP_PROT_TLS1;
 	algs[0] = CALG_RSA_KEYX;

@@ -22,7 +22,7 @@ int asn1_get_next(const u8 *buf, size_t len, struct asn1_hdr *hdr)
 	const u8 *pos, *end;
 	u8 tmp;
 
-	os_memset(hdr, 0, sizeof(*hdr));
+	memset(hdr, 0, sizeof(*hdr));
 	pos = buf;
 	end = buf + len;
 
@@ -88,7 +88,7 @@ int asn1_parse_oid(const u8 *buf, size_t len, struct asn1_oid *oid)
 	unsigned long val;
 	u8 tmp;
 
-	os_memset(oid, 0, sizeof(*oid));
+	memset(oid, 0, sizeof(*oid));
 
 	pos = buf;
 	end = buf + len;

@@ -157,7 +157,7 @@ static PRStatus nss_io_getpeername(PRFileDesc *fd, PRNetAddr *addr)
 	 * fake IPv4 address to work around this even though we are not really
 	 * using TCP.
 	 */
-	os_memset(addr, 0, sizeof(*addr));
+	memset(addr, 0, sizeof(*addr));
 	addr->inet.family = PR_AF_INET;
 
 	return PR_SUCCESS;

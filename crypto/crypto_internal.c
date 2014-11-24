@@ -63,7 +63,7 @@ struct crypto_hash * crypto_hash_init(enum crypto_hash_alg alg, const u8 *key,
 		ctx->key_len = key_len;
 
 		os_memcpy(k_pad, key, key_len);
-		os_memset(k_pad + key_len, 0, sizeof(k_pad) - key_len);
+		memset(k_pad + key_len, 0, sizeof(k_pad) - key_len);
 		for (i = 0; i < sizeof(k_pad); i++)
 			k_pad[i] ^= 0x36;
 		MD5Init(&ctx->u.md5);
@@ -81,7 +81,7 @@ struct crypto_hash * crypto_hash_init(enum crypto_hash_alg alg, const u8 *key,
 		ctx->key_len = key_len;
 
 		os_memcpy(k_pad, key, key_len);
-		os_memset(k_pad + key_len, 0, sizeof(k_pad) - key_len);
+		memset(k_pad + key_len, 0, sizeof(k_pad) - key_len);
 		for (i = 0; i < sizeof(k_pad); i++)
 			k_pad[i] ^= 0x36;
 		SHA1Init(&ctx->u.sha1);
@@ -157,7 +157,7 @@ int crypto_hash_finish(struct crypto_hash *ctx, u8 *mac, size_t *len)
 		MD5Final(mac, &ctx->u.md5);
 
 		os_memcpy(k_pad, ctx->key, ctx->key_len);
-		os_memset(k_pad + ctx->key_len, 0,
+		memset(k_pad + ctx->key_len, 0,
 			  sizeof(k_pad) - ctx->key_len);
 		for (i = 0; i < sizeof(k_pad); i++)
 			k_pad[i] ^= 0x5c;
@@ -177,7 +177,7 @@ int crypto_hash_finish(struct crypto_hash *ctx, u8 *mac, size_t *len)
 		SHA1Final(mac, &ctx->u.sha1);
 
 		os_memcpy(k_pad, ctx->key, ctx->key_len);
-		os_memset(k_pad + ctx->key_len, 0,
+		memset(k_pad + ctx->key_len, 0,
 			  sizeof(k_pad) - ctx->key_len);
 		for (i = 0; i < sizeof(k_pad); i++)
 			k_pad[i] ^= 0x5c;

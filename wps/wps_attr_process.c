@@ -313,7 +313,7 @@ int wps_process_ap_settings(struct wps_parse_attr *attr,
 			    struct wps_credential *cred)
 {
 	wpa_printf(MSG_DEBUG, "WPS: Processing AP Settings");
-	os_memset(cred, 0, sizeof(*cred));
+	memset(cred, 0, sizeof(*cred));
 	/* TODO: optional attributes New Password and Device Password ID */
 	if (wps_process_cred_ssid(cred, attr->ssid, attr->ssid_len) ||
 	    wps_process_cred_auth_type(cred, attr->auth_type) ||

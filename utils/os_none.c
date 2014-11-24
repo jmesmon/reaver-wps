@@ -133,7 +133,7 @@ void * os_memmove(void *dest, const void *src, size_t n)
 }
 
 
-void * os_memset(void *s, int c, size_t n)
+void * memset(void *s, int c, size_t n)
 {
 	return s;
 }

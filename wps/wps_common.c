@@ -260,7 +260,7 @@ void wps_fail_event(struct wps_context *wps, enum wps_msg_type msg)
 	if (wps->event_cb == NULL)
 		return;
 
-	os_memset(&data, 0, sizeof(data));
+	memset(&data, 0, sizeof(data));
 	data.fail.msg = msg;
 	wps->event_cb(wps->cb_ctx, WPS_EV_FAIL, &data);
 }
@@ -282,7 +282,7 @@ void wps_pwd_auth_fail_event(struct wps_context *wps, int enrollee, int part)
 	if (wps->event_cb == NULL)
 		return;
 
-	os_memset(&data, 0, sizeof(data));
+	memset(&data, 0, sizeof(data));
 	data.pwd_auth_fail.enrollee = enrollee;
 	data.pwd_auth_fail.part = part;
 	wps->event_cb(wps->cb_ctx, WPS_EV_PWD_AUTH_FAIL, &data);
@@ -321,7 +321,7 @@ static struct wpabuf * wps_get_oob_cred(struct wps_context *wps)
 		return NULL;
 	}
 
-	os_memset(&data, 0, sizeof(data));
+	memset(&data, 0, sizeof(data));
 	data.wps = wps;
 	data.auth_type = wps->auth_types;
 	data.encr_type = wps->encr_types;
@@ -425,7 +425,7 @@ static int wps_parse_oob_cred(struct wps_context *wps, struct wpabuf *data)
 		struct wps_credential local_cred;
 		struct wps_parse_attr cattr;
 
-		os_memset(&local_cred, 0, sizeof(local_cred));
+		memset(&local_cred, 0, sizeof(local_cred));
 		wpabuf_set(&msg, attr.cred[i], attr.cred_len[i]);
 		if (wps_parse_msg(&msg, &cattr) < 0 ||
 		    wps_process_cred(&cattr, &local_cred)) {

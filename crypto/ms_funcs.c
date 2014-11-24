@@ -106,7 +106,7 @@ void challenge_response(const u8 *challenge, const u8 *password_hash,
 	des_encrypt(challenge, password_hash + 7, response + 8);
 	zpwd[0] = password_hash[14];
 	zpwd[1] = password_hash[15];
-	os_memset(zpwd + 2, 0, 5);
+	memset(zpwd + 2, 0, 5);
 	des_encrypt(challenge, zpwd, response + 16);
 }
 
@@ -391,7 +391,7 @@ int encrypt_pw_block_with_password_hash(
 	if (password_len > 256)
 		return -1;
 
-	os_memset(pw_block, 0, PWBLOCK_LEN);
+	memset(pw_block, 0, PWBLOCK_LEN);
 	offset = (256 - password_len) * 2;
 	if (os_get_random(pw_block, offset) < 0)
 		return -1;

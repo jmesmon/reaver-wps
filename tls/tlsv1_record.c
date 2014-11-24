@@ -79,7 +79,7 @@ int tlsv1_record_change_write_cipher(struct tlsv1_record_layer *rl)
 	wpa_printf(MSG_DEBUG, "TLSv1: Record Layer - New write cipher suite "
 		   "0x%04x", rl->cipher_suite);
 	rl->write_cipher_suite = rl->cipher_suite;
-	os_memset(rl->write_seq_num, 0, TLS_SEQ_NUM_LEN);
+	memset(rl->write_seq_num, 0, TLS_SEQ_NUM_LEN);
 
 	if (rl->write_cbc) {
 		crypto_cipher_deinit(rl->write_cbc);
@@ -113,7 +113,7 @@ int tlsv1_record_change_read_cipher(struct tlsv1_record_layer *rl)
 	wpa_printf(MSG_DEBUG, "TLSv1: Record Layer - New read cipher suite "
 		   "0x%04x", rl->cipher_suite);
 	rl->read_cipher_suite = rl->cipher_suite;
-	os_memset(rl->read_seq_num, 0, TLS_SEQ_NUM_LEN);
+	memset(rl->read_seq_num, 0, TLS_SEQ_NUM_LEN);
 
 	if (rl->read_cbc) {
 		crypto_cipher_deinit(rl->read_cbc);
@@ -210,7 +210,7 @@ int tlsv1_record_send(struct tlsv1_record_layer *rl, u8 content_type, u8 *buf,
 					   "block cipher padding");
 				return -1;
 			}
-			os_memset(pos, pad, pad + 1);
+			memset(pos, pad, pad + 1);
 			pos += pad + 1;
 		}
 

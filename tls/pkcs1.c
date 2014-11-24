@@ -51,11 +51,11 @@ static int pkcs1_generate_encryption_block(u8 block_type, size_t modlen,
 	ps_len = modlen - inlen - 3;
 	switch (block_type) {
 	case 0:
-		os_memset(pos, 0x00, ps_len);
+		memset(pos, 0x00, ps_len);
 		pos += ps_len;
 		break;
 	case 1:
-		os_memset(pos, 0xff, ps_len);
+		memset(pos, 0xff, ps_len);
 		pos += ps_len;
 		break;
 	case 2:

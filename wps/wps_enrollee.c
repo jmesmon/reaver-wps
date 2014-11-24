@@ -663,7 +663,7 @@ static int wps_process_cred_e(struct wps_data *wps, const u8 *cred,
 	struct wpabuf msg;
 
 	wpa_printf(MSG_DEBUG, "WPS: Received Credential");
-	os_memset(&wps->cred, 0, sizeof(wps->cred));
+	memset(&wps->cred, 0, sizeof(wps->cred));
 	wpabuf_set(&msg, cred, cred_len);
 	if (wps_parse_msg(&msg, &attr) < 0 ||
 	    wps_process_cred(&attr, &wps->cred))
@@ -826,7 +826,7 @@ static enum wps_process_res wps_process_m2d(struct wps_data *wps,
 	if (wps->wps->event_cb) {
 		union wps_event_data data;
 		struct wps_event_m2d *m2d = &data.m2d;
-		os_memset(&data, 0, sizeof(data));
+		memset(&data, 0, sizeof(data));
 		if (attr->config_methods)
 			m2d->config_methods =
 				WPA_GET_BE16(attr->config_methods);

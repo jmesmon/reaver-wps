@@ -60,7 +60,7 @@ static int pkcs5_get_params(const u8 *enc_alg, size_t enc_alg_len,
 
 	enc_alg_end = enc_alg + enc_alg_len;
 
-	os_memset(params, 0, sizeof(*params));
+	memset(params, 0, sizeof(*params));
 
 	if (asn1_get_oid(enc_alg, enc_alg_end - enc_alg, &oid, &pos)) {
 		wpa_printf(MSG_DEBUG, "PKCS #5: Failed to parse OID "

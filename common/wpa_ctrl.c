@@ -69,7 +69,7 @@ struct wpa_ctrl * wpa_ctrl_open(const char *ctrl_path)
 	ctrl = os_malloc(sizeof(*ctrl));
 	if (ctrl == NULL)
 		return NULL;
-	os_memset(ctrl, 0, sizeof(*ctrl));
+	memset(ctrl, 0, sizeof(*ctrl));
 
 	ctrl->s = socket(PF_UNIX, SOCK_DGRAM, 0);
 	if (ctrl->s < 0) {
@@ -146,7 +146,7 @@ struct wpa_ctrl * wpa_ctrl_open(const char *ctrl_path)
 	ctrl = os_malloc(sizeof(*ctrl));
 	if (ctrl == NULL)
 		return NULL;
-	os_memset(ctrl, 0, sizeof(*ctrl));
+	memset(ctrl, 0, sizeof(*ctrl));
 
 	ctrl->s = socket(PF_INET, SOCK_DGRAM, 0);
 	if (ctrl->s < 0) {
@@ -349,7 +349,7 @@ struct wpa_ctrl * wpa_ctrl_open(const char *ctrl_path)
 	ctrl = os_malloc(sizeof(*ctrl));
 	if (ctrl == NULL)
 		return NULL;
-	os_memset(ctrl, 0, sizeof(*ctrl));
+	memset(ctrl, 0, sizeof(*ctrl));
 
 #ifdef UNICODE
 	if (ctrl_path == NULL)

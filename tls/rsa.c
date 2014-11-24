@@ -319,7 +319,7 @@ int crypto_rsa_exptmod(const u8 *in, size_t inlen, u8 *out, size_t *outlen,
 		goto error; /* should never happen */
 
 	*outlen = modlen;
-	os_memset(out, 0, modlen);
+	memset(out, 0, modlen);
 	if (bignum_get_unsigned_bin(
 		    tmp, out +
 		    (modlen - bignum_get_unsigned_bin_len(tmp)), NULL) < 0)

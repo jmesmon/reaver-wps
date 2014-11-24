@@ -176,7 +176,7 @@ static void MD4Final(unsigned char digest[MD4_DIGEST_LENGTH], MD4_CTX *ctx)
 	if (digest != NULL) {
 		for (i = 0; i < 4; i++)
 			PUT_32BIT_LE(digest + i * 4, ctx->state[i]);
-		os_memset(ctx, 0, sizeof(*ctx));
+		memset(ctx, 0, sizeof(*ctx));
 	}
 }
 

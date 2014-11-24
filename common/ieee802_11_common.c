@@ -139,7 +139,7 @@ ParseRes ieee802_11_parse_elems(const u8 *start, size_t len,
 	const u8 *pos = start;
 	int unknown = 0;
 
-	os_memset(elems, 0, sizeof(*elems));
+	memset(elems, 0, sizeof(*elems));
 
 	while (left >= 2) {
 		u8 id, elen;

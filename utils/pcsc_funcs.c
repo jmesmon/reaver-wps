@@ -928,7 +928,7 @@ static int scard_verify_pin(struct scard_data *scard, const char *pin)
 	if (scard->sim_type == SCARD_USIM)
 		cmd[0] = USIM_CLA;
 	os_memcpy(cmd + 5, pin, os_strlen(pin));
-	os_memset(cmd + 5 + os_strlen(pin), 0xff, 8 - os_strlen(pin));
+	memset(cmd + 5 + os_strlen(pin), 0xff, 8 - os_strlen(pin));
 
 	len = sizeof(resp);
 	ret = scard_transmit(scard, cmd, sizeof(cmd), resp, &len);

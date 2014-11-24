@@ -1173,7 +1173,7 @@ int wps_build_cred(struct wps_data *wps, struct wpabuf *msg)
 		os_memcpy(&wps->cred, wps->use_cred, sizeof(wps->cred));
 		goto use_provided;
 	}
-	os_memset(&wps->cred, 0, sizeof(wps->cred));
+	memset(&wps->cred, 0, sizeof(wps->cred));
 
 	os_memcpy(wps->cred.ssid, wps->wps->ssid, wps->wps->ssid_len);
 	wps->cred.ssid_len = wps->wps->ssid_len;
@@ -2557,7 +2557,7 @@ static enum wps_process_res wps_process_wsc_done(struct wps_data *wps,
 		wpa_printf(MSG_DEBUG, "WPS: Moving to Configured state based "
 			   "on first Enrollee connection");
 
-		os_memset(&cred, 0, sizeof(cred));
+		memset(&cred, 0, sizeof(cred));
 		os_memcpy(cred.ssid, wps->wps->ssid, wps->wps->ssid_len);
 		cred.ssid_len = wps->wps->ssid_len;
 		cred.auth_type = WPS_AUTH_WPAPSK | WPS_AUTH_WPA2PSK;

@@ -414,7 +414,7 @@ int wps_parse_msg(const struct wpabuf *msg, struct wps_parse_attr *attr)
 	const u8 *pos, *end;
 	u16 type, len;
 
-	os_memset(attr, 0, sizeof(*attr));
+	memset(attr, 0, sizeof(*attr));
 	pos = wpabuf_head(msg);
 	end = pos + wpabuf_len(msg);
 

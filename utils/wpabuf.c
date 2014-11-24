@@ -78,7 +78,7 @@ int wpabuf_resize(struct wpabuf **_buf, size_t add_len)
 			nbuf = os_realloc(buf->ext_data, buf->used + add_len);
 			if (nbuf == NULL)
 				return -1;
-			os_memset(nbuf + buf->used, 0, add_len);
+			memset(nbuf + buf->used, 0, add_len);
 			buf->ext_data = nbuf;
 		} else {
 #ifdef WPA_TRACE
@@ -89,7 +89,7 @@ int wpabuf_resize(struct wpabuf **_buf, size_t add_len)
 				return -1;
 			trace = (struct wpabuf_trace *) nbuf;
 			buf = (struct wpabuf *) (trace + 1);
-			os_memset(nbuf + sizeof(struct wpabuf_trace) +
+			memset(nbuf + sizeof(struct wpabuf_trace) +
 				  sizeof(struct wpabuf) + buf->used, 0,
 				  add_len);
 #else /* WPA_TRACE */
@@ -98,7 +98,7 @@ int wpabuf_resize(struct wpabuf **_buf, size_t add_len)
 			if (nbuf == NULL)
 				return -1;
 			buf = (struct wpabuf *) nbuf;
-			os_memset(nbuf + sizeof(struct wpabuf) + buf->used, 0,
+			memset(nbuf + sizeof(struct wpabuf) + buf->used, 0,
 				  add_len);
 #endif /* WPA_TRACE */
 			*_buf = buf;
@@ -280,7 +280,7 @@ struct wpabuf * wpabuf_zeropad(struct wpabuf *buf, size_t len)
 
 	ret = wpabuf_alloc(len);
 	if (ret) {
-		os_memset(wpabuf_put(ret, len - blen), 0, len - blen);
+		memset(wpabuf_put(ret, len - blen), 0, len - blen);
 		wpabuf_put_buf(ret, buf);
 	}
 	wpabuf_free(buf);

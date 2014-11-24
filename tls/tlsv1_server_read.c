@@ -550,7 +550,7 @@ static int tls_process_client_key_exchange_rsa(
 	res = tlsv1_server_derive_keys(conn, out, outlen);
 
 	/* Clear the pre-master secret since it is not needed anymore */
-	os_memset(out, 0, outbuflen);
+	memset(out, 0, outbuflen);
 	os_free(out);
 
 	if (res) {
@@ -646,14 +646,14 @@ static int tls_process_client_key_exchange_dh_anon(
 	wpa_hexdump_key(MSG_DEBUG, "TLSv1: Shared secret from DH key exchange",
 			shared, shared_len);
 
-	os_memset(conn->dh_secret, 0, conn->dh_secret_len);
+	memset(conn->dh_secret, 0, conn->dh_secret_len);
 	os_free(conn->dh_secret);
 	conn->dh_secret = NULL;
 
 	res = tlsv1_server_derive_keys(conn, shared, shared_len);
 
 	/* Clear the pre-master secret since it is not needed anymore */
-	os_memset(shared, 0, shared_len);
+	memset(shared, 0, shared_len);
 	os_free(shared);
 
 	if (res) {

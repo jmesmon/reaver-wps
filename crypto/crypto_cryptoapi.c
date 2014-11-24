@@ -213,7 +213,7 @@ void des_encrypt(const u8 *clear, const u8 *key, u8 *cypher)
 	if (!CryptEncrypt(ckey, 0, FALSE, 0, cypher, &dlen, 8)) {
 		wpa_printf(MSG_DEBUG, "CryptoAPI: CryptEncrypt failed: %d",
 			   (int) GetLastError());
-		os_memset(cypher, 0, 8);
+		memset(cypher, 0, 8);
 	}
 
 	CryptDestroyKey(ckey);
@@ -304,7 +304,7 @@ void aes_encrypt(void *ctx, const u8 *plain, u8 *crypt)
 	if (!CryptEncrypt(akey->ckey, 0, FALSE, 0, crypt, &dlen, 16)) {
 		wpa_printf(MSG_DEBUG, "CryptoAPI: CryptEncrypt failed: %d",
 			   (int) GetLastError());
-		os_memset(crypt, 0, 16);
+		memset(crypt, 0, 16);
 	}
 }
 
@@ -366,7 +366,7 @@ struct crypto_hash * crypto_hash_init(enum crypto_hash_alg alg, const u8 *key,
 		BYTE key[32];
 	} key_blob;
 
-	os_memset(&key_blob, 0, sizeof(key_blob));
+	memset(&key_blob, 0, sizeof(key_blob));
 	switch (alg) {
 	case CRYPTO_HASH_ALG_MD5:
 		calg = CALG_MD5;
@@ -431,7 +431,7 @@ struct crypto_hash * crypto_hash_init(enum crypto_hash_alg alg, const u8 *key,
 
 	if (calg == CALG_HMAC) {
 		HMAC_INFO info;
-		os_memset(&info, 0, sizeof(info));
+		memset(&info, 0, sizeof(info));
 		switch (alg) {
 		case CRYPTO_HASH_ALG_HMAC_MD5:
 			info.HashAlgid = CALG_MD5;
@@ -602,7 +602,7 @@ int crypto_cipher_encrypt(struct crypto_cipher *ctx, const u8 *plain,
 	dlen = len;
 	if (!CryptEncrypt(ctx->key, 0, FALSE, 0, crypt, &dlen, len)) {
  		cryptoapi_report_error("CryptEncrypt");
-		os_memset(crypt, 0, len);
+		memset(crypt, 0, len);
 		return -1;
 	}
 

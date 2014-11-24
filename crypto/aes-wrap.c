@@ -38,7 +38,7 @@ int aes_wrap(const u8 *kek, int n, const u8 *plain, u8 *cipher)
 	r = cipher + 8;
 
 	/* 1) Initialize variables. */
-	os_memset(a, 0xa6, 8);
+	memset(a, 0xa6, 8);
 	os_memcpy(r, plain, 8 * n);
 
 	ctx = aes_encrypt_init(kek, 16);

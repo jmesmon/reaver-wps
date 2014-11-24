@@ -307,7 +307,7 @@ static int tlsv1_key_x_anon_dh(struct tlsv1_client *conn, u8 **pos, u8 *end)
 	wpa_hexdump_key(MSG_DEBUG, "TLSv1: Shared secret from DH key exchange",
 			shared, shared_len);
 
-	os_memset(csecret_start, 0, csecret_len);
+	memset(csecret_start, 0, csecret_len);
 	os_free(csecret);
 	if (tls_derive_keys(conn, shared, shared_len)) {
 		wpa_printf(MSG_DEBUG, "TLSv1: Failed to derive keys");
@@ -316,7 +316,7 @@ static int tlsv1_key_x_anon_dh(struct tlsv1_client *conn, u8 **pos, u8 *end)
 		os_free(shared);
 		return -1;
 	}
-	os_memset(shared, 0, shared_len);
+	memset(shared, 0, shared_len);
 	os_free(shared);
 	tlsv1_client_free_dh(conn);
 	return 0;
@@ -354,7 +354,7 @@ static int tlsv1_key_x_rsa(struct tlsv1_client *conn, u8 **pos, u8 *end)
 		conn->server_rsa_key,
 		pre_master_secret, TLS_PRE_MASTER_SECRET_LEN,
 		*pos, &clen);
-	os_memset(pre_master_secret, 0, TLS_PRE_MASTER_SECRET_LEN);
+	memset(pre_master_secret, 0, TLS_PRE_MASTER_SECRET_LEN);
 	if (res < 0) {
 		wpa_printf(MSG_DEBUG, "TLSv1: RSA encryption failed");
 		tls_alert(conn, TLS_ALERT_LEVEL_FATAL,

@@ -57,7 +57,7 @@ int os_mktime(int year, int month, int day, int hour, int min, int sec,
 	    sec > 60)
 		return -1;
 
-	os_memset(&tm, 0, sizeof(tm));
+	memset(&tm, 0, sizeof(tm));
 	tm.tm_year = year - 1900;
 	tm.tm_mon = month - 1;
 	tm.tm_mday = day;
@@ -222,7 +222,7 @@ void * os_zalloc(size_t size)
 {
 	void *n = os_malloc(size);
 	if (n)
-		os_memset(n, 0, size);
+		memset(n, 0, size);
 	return n;
 }
 
@@ -270,7 +270,7 @@ void * os_memmove(void *dest, const void *src, size_t n)
 }
 
 
-void * os_memset(void *s, int c, size_t n)
+void * memset(void *s, int c, size_t n)
 {
 	char *p = s;
 	while (n--)

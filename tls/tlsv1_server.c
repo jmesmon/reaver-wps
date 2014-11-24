@@ -503,7 +503,7 @@ int tlsv1_server_resumed(struct tlsv1_server *conn)
  */
 int tlsv1_server_get_keys(struct tlsv1_server *conn, struct tls_keys *keys)
 {
-	os_memset(keys, 0, sizeof(*keys));
+	memset(keys, 0, sizeof(*keys));
 	if (conn->state == CLIENT_HELLO)
 		return -1;
 

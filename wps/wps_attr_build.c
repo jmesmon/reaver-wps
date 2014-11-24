@@ -265,7 +265,7 @@ int wps_build_encr_settings(struct wps_data *wps, struct wpabuf *msg,
 
 	/* PKCS#5 v2.0 pad */
 	pad_len = block_size - wpabuf_len(plain) % block_size;
-	os_memset(wpabuf_put(plain, pad_len), pad_len, pad_len);
+	memset(wpabuf_put(plain, pad_len), pad_len, pad_len);
 
 	wpabuf_put_be16(msg, ATTR_ENCR_SETTINGS);
 	wpabuf_put_be16(msg, block_size + wpabuf_len(plain));

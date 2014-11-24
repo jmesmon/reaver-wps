@@ -1111,7 +1111,7 @@ static void openssl_tls_fail_event(struct tls_connection *conn,
 		return;
 
 	cert = get_x509_cert(err_cert);
-	os_memset(&ev, 0, sizeof(ev));
+	memset(&ev, 0, sizeof(ev));
 	ev.cert_fail.reason = reason != TLS_FAIL_UNSPECIFIED ?
 		reason : openssl_tls_fail_reason(err);
 	ev.cert_fail.depth = depth;
@@ -1136,7 +1136,7 @@ static void openssl_tls_cert_event(struct tls_connection *conn,
 	if (tls_global->event_cb == NULL)
 		return;
 
-	os_memset(&ev, 0, sizeof(ev));
+	memset(&ev, 0, sizeof(ev));
 	if (conn->cert_probe) {
 		cert = get_x509_cert(err_cert);
 		ev.peer_cert.cert = cert;
@@ -2215,7 +2215,7 @@ int tls_connection_get_keys(void *ssl_ctx, struct tls_connection *conn,
 	if (ssl == NULL || ssl->s3 == NULL || ssl->session == NULL)
 		return -1;
 
-	os_memset(keys, 0, sizeof(*keys));
+	memset(keys, 0, sizeof(*keys));
 	keys->master_key = ssl->session->master_key;
 	keys->master_key_len = ssl->session->master_key_length;
 	keys->client_random = ssl->s3->client_random;

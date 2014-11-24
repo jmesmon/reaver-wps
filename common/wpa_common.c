@@ -168,7 +168,7 @@ int wpa_ft_mic(const u8 *kck, const u8 *sta_addr, const u8 *ap_addr,
 			return -1;
 		}
 		_ftie = (struct rsn_ftie *) (pos + 2);
-		os_memset(_ftie->mic, 0, sizeof(_ftie->mic));
+		memset(_ftie->mic, 0, sizeof(_ftie->mic));
 		pos += ftie_len;
 	}
 	if (ric) {
@@ -249,7 +249,7 @@ int wpa_parse_wpa_ie_rsn(const u8 *rsn_ie, size_t rsn_ie_len,
 	int left;
 	int i, count;
 
-	os_memset(data, 0, sizeof(*data));
+	memset(data, 0, sizeof(*data));
 	data->proto = WPA_PROTO_RSN;
 	data->pairwise_cipher = WPA_CIPHER_CCMP;
 	data->group_cipher = WPA_CIPHER_CCMP;

@@ -562,7 +562,7 @@ int tlsv1_client_hello_ext(struct tlsv1_client *conn, int ext_type,
  */
 int tlsv1_client_get_keys(struct tlsv1_client *conn, struct tls_keys *keys)
 {
-	os_memset(keys, 0, sizeof(*keys));
+	memset(keys, 0, sizeof(*keys));
 	if (conn->state == CLIENT_HELLO)
 		return -1;
 

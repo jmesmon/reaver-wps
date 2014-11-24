@@ -79,7 +79,7 @@ static struct eloop_data eloop;
 
 int eloop_init(void)
 {
-	os_memset(&eloop, 0, sizeof(eloop));
+	memset(&eloop, 0, sizeof(eloop));
 	eloop.num_handles = 1;
 	eloop.handles = os_malloc(eloop.num_handles *
 				  sizeof(eloop.handles[0]));

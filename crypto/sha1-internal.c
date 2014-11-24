@@ -225,7 +225,7 @@ void SHA1Transform(u32 state[5], const unsigned char buffer[64])
 	/* Wipe variables */
 	a = b = c = d = e = 0;
 #ifdef SHA1HANDSOFF
-	os_memset(block, 0, 64);
+	memset(block, 0, 64);
 #endif
 }
 
@@ -299,10 +299,10 @@ void SHA1Final(unsigned char digest[20], SHA1_CTX* context)
 	}
 	/* Wipe variables */
 	i = 0;
-	os_memset(context->buffer, 0, 64);
-	os_memset(context->state, 0, 20);
-	os_memset(context->count, 0, 8);
-	os_memset(finalcount, 0, 8);
+	memset(context->buffer, 0, 64);
+	memset(context->state, 0, 20);
+	memset(context->count, 0, 8);
+	memset(finalcount, 0, 8);
 }
 
 /* ===== end - public domain SHA1 implementation ===== */

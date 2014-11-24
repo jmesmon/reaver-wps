@@ -180,15 +180,15 @@ void MD5Final(unsigned char digest[16], struct MD5Context *ctx)
     /* Pad out to 56 mod 64 */
     if (count < 8) {
 	/* Two lots of padding:  Pad the first block to 64 bytes */
-	os_memset(p, 0, count);
+	memset(p, 0, count);
 	byteReverse(ctx->in, 16);
 	MD5Transform(ctx->buf, (u32 *) ctx->in);
 
 	/* Now fill the next block with 56 bytes */
-	os_memset(ctx->in, 0, 56);
+	memset(ctx->in, 0, 56);
     } else {
 	/* Pad block to 56 bytes */
-	os_memset(p, 0, count - 8);
+	memset(p, 0, count - 8);
     }
     byteReverse(ctx->in, 14);
 

@@ -22,7 +22,7 @@
 static void sha1_transform(u8 *state, const u8 data[64])
 {
 	SHA_CTX context;
-	os_memset(&context, 0, sizeof(context));
+	memset(&context, 0, sizeof(context));
 	os_memcpy(&context.h0, state, 5 * 4);
 	SHA1_Transform(&context, data);
 	os_memcpy(state, &context.h0, 5 * 4);
@@ -43,7 +43,7 @@ int fips186_2_prf(const u8 *seed, size_t seed_len, u8 *x, size_t xlen)
 	/* FIPS 186-2 + change notice 1 */
 
 	os_memcpy(xkey, seed, seed_len);
-	os_memset(xkey + seed_len, 0, 64 - seed_len);
+	memset(xkey + seed_len, 0, 64 - seed_len);
 	t[0] = 0x67452301;
 	t[1] = 0xEFCDAB89;
 	t[2] = 0x98BADCFE;

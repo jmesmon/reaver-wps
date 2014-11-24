@@ -53,7 +53,7 @@ int aes_128_eax_encrypt(const u8 *key, const u8 *nonce, size_t nonce_len,
 	if (buf == NULL)
 		return -1;
 
-	os_memset(buf, 0, 15);
+	memset(buf, 0, 15);
 
 	buf[15] = 0;
 	os_memcpy(buf + 16, nonce, nonce_len);
@@ -117,7 +117,7 @@ int aes_128_eax_decrypt(const u8 *key, const u8 *nonce, size_t nonce_len,
 	if (buf == NULL)
 		return -1;
 
-	os_memset(buf, 0, 15);
+	memset(buf, 0, 15);
 
 	buf[15] = 0;
 	os_memcpy(buf + 16, nonce, nonce_len);
