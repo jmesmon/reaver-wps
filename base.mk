@@ -173,6 +173,8 @@ $(call var-def,RM,rm -f)
 $(call var-def,FLEX,flex)
 $(call var-def,BISON,bison)
 
+# FIXME: checking these is completely wrong, we sould be detecting if certain
+# flags are supported by the compiler by running it with them.
 IS_CLANG := $(shell echo | $(CC) -v 2>&1 | head -n1 | grep -q '^clang' && echo 1 || echo 0)
 IS_GCC   := $(shell echo | $(CC) -v 2>&1 | tail -n1 | grep -q '^gcc'   && echo 1 || echo 0)
 
@@ -207,25 +209,27 @@ endif
 DBG_FLAGS = -ggdb3 -gdwarf-4 -fvar-tracking-assignments
 ifndef NO_SANITIZE
 DBG_FLAGS += -fsanitize=address
+ifeq ($(IS_CLANG),1)
+DBG_FLAGS += -fsanitize=undefined
+endif
 endif
 
 ifndef NO_LTO
 # TODO: use -flto=jobserver
 ifeq ($(CC_TYPE),gcc)
-CFLAGS  ?= -flto $(DBG_FLAGS)
+CFLAGS  ?= -flto $(DBG_FLAGS) -pipe
 LDFLAGS ?= $(ALL_CFLAGS) $(OPT) -fuse-linker-plugin
 else ifeq ($(CC_TYPE),clang)
-CFLAGS  ?= -emit-llvm $(DBG_FLAGS)
+CFLAGS  ?= -emit-llvm $(DBG_FLAGS) -pipe
 LDFLAGS ?= $(OPT)
 endif
 else
-CFLAGS  ?= $(OPT) $(DBG_FLAGS)
+CFLAGS  ?= $(OPT) $(DBG_FLAGS) -pipe
 endif
 
 # c/c+++ shared flags
 COMMON_CFLAGS += -Wall
 COMMON_CFLAGS += -Wundef -Wshadow
-COMMON_CFLAGS += -pipe
 COMMON_CFLAGS += -Wcast-align
 COMMON_CFLAGS += -Wwrite-strings
 
