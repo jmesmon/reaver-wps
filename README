@@ -19,6 +19,8 @@ TODO:
 		- https://github.com/bdpurcell/bully (dead?)
 		- https://github.com/mir-ror/reaver-wps-fork
 		- https://github.com/tizzaran/reaver-wps.git
+			- cherry picked up to
+			  e7787d284d84eda36b5452c1b5a7393cdb509049
 
 	- check distro patches
 		- gentoo
