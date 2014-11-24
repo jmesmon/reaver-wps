@@ -266,7 +266,7 @@ const void *build_eap_header(uint8_t id, uint8_t code, uint8_t type, uint16_t pa
 	return buf;
 }
 
-const void *build_wfa_header(uint8_t op_code, size_t *len)
+static const void *build_wfa_header(uint8_t op_code, size_t *len)
 {
 	const void *buf = NULL;
 	struct wfa_expanded_header *header = NULL;
