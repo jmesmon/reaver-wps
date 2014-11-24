@@ -1,32 +1,69 @@
 
 CONFDIR=$(HOME)/var/reaver
 
-obj-wps    = $(addprefix wps/,wps_attr_build.o wps_attr_parse.o		\
-		wps_attr_process.o wps.o wps_common.o wps_dev_attr.o	\
-		wps_enrollee.o wps_registrar.o wps_ufd.o)
-obj-utils  = $(addprefix utils/,base64.o common.o eloop.o ip_addr.o os_unix.o	\
-		radiotap.o trace.o uuid.o wpabuf.o wpa_debug.o)
+
+## UTILS {
+obj-utils += hostap/src/utils/base64.o
+obj-utils += hostap/src/utils/common.o
+obj-utils += hostap/src/utils/eloop.o
+obj-utils += hostap/src/utils/ip_addr.o
+obj-utils += hostap/src/utils/os_unix.o
+obj-utils += hostap/src/utils/radiotap.o
+obj-utils += hostap/src/utils/trace.o
+obj-utils += hostap/src/utils/uuid.o
+obj-utils += hostap/src/utils/wpabuf.o
+obj-utils += hostap/src/utils/wpa_debug.o
+
+define DEF_CFLAGS_FOR_UTILS
+cflags-$1 += -Ihostap/src -Ihostap/src/utils
+
+endef
+$(eval $(foreach obj,$(obj-utils),$(call DEF_CFLAGS_FOR_UTILS,$(obj))))
+
+
+## }
+
+## WPS {
+obj-wps += hostap/src/wps/wps_attr_build.o
+obj-wps += hostap/src/wps/wps_attr_parse.o
+obj-wps += hostap/src/wps/wps_attr_process.o
+obj-wps += hostap/src/wps/wps.o
+obj-wps += hostap/src/wps/wps_common.o
+obj-wps += hostap/src/wps/wps_dev_attr.o
+obj-wps += hostap/src/wps/wps_enrollee.o
+obj-wps += hostap/src/wps/wps_registrar.o
+#obj-wps += hostap/src/wps/wps_ufd.o
+
+define DEF_CFLAGS_FOR_WPS
+cflags-$1 += -Ihostap/src -Ihostap/src/utils
+
+endef
+$(eval $(foreach obj,$(obj-wps),$(call DEF_CFLAGS_FOR_WPS,$(obj))))
+
+## }
 
 ## TLS {
-obj-tls += tls/asn1.o
-obj-tls += tls/bignum.o
-obj-tls += tls/pkcs1.o
-obj-tls += tls/pkcs5.o
-obj-tls += tls/pkcs8.o
-obj-tls += tls/rsa.o
-obj-tls += tls/tlsv1_client.o
-obj-tls += tls/tlsv1_client_read.o
-obj-tls += tls/tlsv1_client_write.o
-obj-tls += tls/tlsv1_common.o
-obj-tls += tls/tlsv1_cred.o
-obj-tls += tls/tlsv1_record.o
-obj-tls += tls/tlsv1_server.o
-obj-tls += tls/tlsv1_server_read.o
-obj-tls += tls/tlsv1_server_write.o
-obj-tls += tls/x509v3.o
+obj-tls += hostap/src/tls/asn1.o
+obj-tls += hostap/src/tls/bignum.o
+obj-tls += hostap/src/tls/pkcs1.o
+obj-tls += hostap/src/tls/pkcs5.o
+obj-tls += hostap/src/tls/pkcs8.o
+obj-tls += hostap/src/tls/rsa.o
+obj-tls += hostap/src/tls/tlsv1_client.o
+obj-tls += hostap/src/tls/tlsv1_client_read.o
+obj-tls += hostap/src/tls/tlsv1_client_write.o
+obj-tls += hostap/src/tls/tlsv1_common.o
+obj-tls += hostap/src/tls/tlsv1_cred.o
+obj-tls += hostap/src/tls/tlsv1_record.o
+obj-tls += hostap/src/tls/tlsv1_server.o
+obj-tls += hostap/src/tls/tlsv1_server_read.o
+obj-tls += hostap/src/tls/tlsv1_server_write.o
+obj-tls += hostap/src/tls/x509v3.o
 
 define DEF_CFLAGS_FOR_TLS
-cflags-$1 += -DCONFIG_INTERNAL_LIBTOMMATH -DCONFIG_CRYPTO_INTERNAL
+cflags-$1 += -DCONFIG_INTERNAL_LIBTOMMATH -DCONFIG_CRYPTO_INTERNAL \
+		-DCONFIG_TLSV1 -DCONFIG_TLSV2 \
+		-Ihostap/src -Ihostap/src/utils
 
 endef
 $(eval $(foreach obj,$(obj-tls),$(call DEF_CFLAGS_FOR_TLS,$(obj))))
@@ -34,40 +71,43 @@ $(eval $(foreach obj,$(obj-tls),$(call DEF_CFLAGS_FOR_TLS,$(obj))))
 
 ## CRYPTO {
 
-obj-crypto += crypto/aes-cbc.o
-obj-crypto += crypto/aes-ctr.o
-obj-crypto += crypto/aes-eax.o
-obj-crypto += crypto/aes-encblock.o
-obj-crypto += crypto/aes-internal.o
-obj-crypto += crypto/aes-internal-dec.o
-obj-crypto += crypto/aes-internal-enc.o
-obj-crypto += crypto/aes-omac1.o
-obj-crypto += crypto/aes-unwrap.o
-obj-crypto += crypto/aes-wrap.o
-obj-crypto += crypto/crypto_internal.o
-obj-crypto += crypto/crypto_internal-cipher.o
-obj-crypto += crypto/crypto_internal-modexp.o
-obj-crypto += crypto/crypto_internal-rsa.o
-obj-crypto += crypto/des-internal.o
-obj-crypto += crypto/dh_group5.o
-obj-crypto += crypto/dh_groups.o
-obj-crypto += crypto/fips_prf_internal.o
-obj-crypto += crypto/md4-internal.o
-obj-crypto += crypto/md5.o
-obj-crypto += crypto/md5-internal.o
-obj-crypto += crypto/ms_funcs.o
-obj-crypto += crypto/rc4.o
-obj-crypto += crypto/sha1.o
-obj-crypto += crypto/sha1-internal.o
-obj-crypto += crypto/sha1-pbkdf2.o
-obj-crypto += crypto/sha1-tlsprf.o
-obj-crypto += crypto/sha1-tprf.o
-obj-crypto += crypto/sha256.o
-obj-crypto += crypto/sha256-internal.o
-obj-crypto += crypto/tls_internal.o
+obj-crypto += hostap/src/crypto/aes-cbc.o
+obj-crypto += hostap/src/crypto/aes-ctr.o
+obj-crypto += hostap/src/crypto/aes-eax.o
+obj-crypto += hostap/src/crypto/aes-encblock.o
+obj-crypto += hostap/src/crypto/aes-internal.o
+obj-crypto += hostap/src/crypto/aes-internal-dec.o
+obj-crypto += hostap/src/crypto/aes-internal-enc.o
+obj-crypto += hostap/src/crypto/aes-omac1.o
+obj-crypto += hostap/src/crypto/aes-unwrap.o
+obj-crypto += hostap/src/crypto/aes-wrap.o
+obj-crypto += hostap/src/crypto/crypto_internal.o
+obj-crypto += hostap/src/crypto/crypto_internal-cipher.o
+obj-crypto += hostap/src/crypto/crypto_internal-modexp.o
+obj-crypto += hostap/src/crypto/crypto_internal-rsa.o
+obj-crypto += hostap/src/crypto/des-internal.o
+obj-crypto += hostap/src/crypto/dh_group5.o
+obj-crypto += hostap/src/crypto/dh_groups.o
+obj-crypto += hostap/src/crypto/fips_prf_internal.o
+obj-crypto += hostap/src/crypto/md4-internal.o
+obj-crypto += hostap/src/crypto/md5.o
+obj-crypto += hostap/src/crypto/md5-internal.o
+obj-crypto += hostap/src/crypto/ms_funcs.o
+obj-crypto += hostap/src/crypto/random.o
+obj-crypto += hostap/src/crypto/rc4.o
+obj-crypto += hostap/src/crypto/sha1.o
+obj-crypto += hostap/src/crypto/sha1-internal.o
+obj-crypto += hostap/src/crypto/sha1-pbkdf2.o
+obj-crypto += hostap/src/crypto/sha1-tlsprf.o
+obj-crypto += hostap/src/crypto/sha1-tprf.o
+obj-crypto += hostap/src/crypto/sha256.o
+obj-crypto += hostap/src/crypto/sha256-internal.o
+obj-crypto += hostap/src/crypto/tls_internal.o
 
 define DEF_CFLAGS_FOR_CRYPTO
-cflags-$1 += -DCONFIG_TLS_INTERNAL_CLIENT -DCONFIG_TLS_INTERNAL_SERVER
+cflags-$1 += -DCONFIG_CRYPTO_INTERNAL -DCONFIG_TLS_INTERNAL_CLIENT \
+	-DCONFIG_TLS_INTERNAL_SERVER -DCONFIG_SHA256 \
+	-Ihostap/src/utils -Ihostap/src
 
 endef
 
@@ -88,13 +128,13 @@ TARGETS_BIN = reaver wash
 SQLITE3_CFLAGS  =
 SQLITE3_LDFLAGS = -lsqlite3
 
-PCAP_LDFLAGS = -lpcap
 PCAP_CFLAGS  =
+PCAP_LDFLAGS = -lpcap
 
 LIBIW_CFLAGS =
 LIBIW_LDFLAGS = -liw
 
-ALL_CFLAGS  += -I. -Iutils -DCONF_DIR="\"$(CONFDIR)\""
+ALL_CFLAGS  += -DCONF_DIR="\"$(CONFDIR)\"" -Ihostap/src
 ALL_LDFLAGS += -lm
 
 ALL_CFLAGS  += $(PCAP_CFLAGS)  $(SQLITE3_CFLAGS)  $(LIBIW_CFLAGS)

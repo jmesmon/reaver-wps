@@ -120,7 +120,9 @@ int send_msg(int type)
 	 * Get the next message we need to send based on the data retrieved 
 	 * from wps_registrar_process_msg (see exchange.c).
 	 */
-        msg = wps_registrar_get_msg(wps, &opcode, type);
+	/* XXX: uses wps->state instead of 'type', may need to hack it in */
+	wps->state = type;
+        msg = wps_registrar_get_msg(wps, &opcode);
 	set_opcode(opcode);
         if(msg)
         {

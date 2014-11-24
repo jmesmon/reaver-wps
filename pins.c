@@ -75,7 +75,7 @@ char *build_next_pin(void)
         if(pin)
         {
                 /* Add the new pin */
-                if(wps_registrar_add_pin(wps->wps->registrar, NULL, (const u8 *) pin, PIN_SIZE, 0) != 0)
+                if(wps_registrar_add_pin(wps->wps->registrar, NULL, NULL, (const u8 *) pin, PIN_SIZE, 0) != 0)
                 {
                         free(pin);
                         pin = NULL;

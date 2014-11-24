@@ -165,7 +165,7 @@ int restore_session(void)
 int save_session(void)
 {
 	unsigned char *bssid = NULL;
-	char *wpa_key = NULL, *essid = NULL, *pretty_bssid = NULL;
+	unsigned char *wpa_key = NULL, *essid = NULL, *pretty_bssid = NULL;
         char file_name[FILENAME_MAX] = { 0 };
         char line[MAX_LINE_SIZE] = { 0 };
         FILE *fp = NULL;
@@ -175,12 +175,12 @@ int save_session(void)
 
 	wps = get_wps();
 	bssid = mac2str(get_bssid(), '\0');
-	pretty_bssid = (char *) mac2str(get_bssid(), ':');
+	pretty_bssid = mac2str(get_bssid(), ':');
 
 	if(wps)
 	{
-		wpa_key = wps->key;
-		essid = wps->essid;
+		wpa_key = wps->cred.key;
+		essid = wps->cred.ssid;
 	}
 	
 	if(!bssid || !pretty_bssid)
@@ -253,7 +253,7 @@ int save_session(void)
 							}
 
 							/* If we have the WPA key, then we've exhausted all attempts, and the UI should reflect that */
-							if(wpa_key && strlen(wpa_key) > 0)
+							if(wps->cred.ssid && wps->cred.ssid_len > 0)
 							{
 								attempts = P1_SIZE + P2_SIZE;
 							}
@@ -270,7 +270,7 @@ int save_session(void)
 							}
 
 							/* If we got an SSID from the WPS data, then use that; else, use whatever was used to associate with the AP */
-							if(!essid || strlen(essid) < 0)
+							if(wps->cred.ssid || wps->cred.ssid_len < 0)
 							{
 								essid = get_ssid();
 							}

@@ -38,7 +38,7 @@
 #include <signal.h>
 #include <sys/time.h>
 #include <arpa/inet.h>
-#include <libwps.h>
+#include "libwps.h"
 #include "defs.h"
 #include "globule.h"
 #include "misc.h"

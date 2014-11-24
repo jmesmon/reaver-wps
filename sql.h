@@ -37,7 +37,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sqlite3.h>
-#include <libwps.h>
+#include "libwps.h"
 #include "defs.h"
 #include "globule.h"
 
