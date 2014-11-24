@@ -37,7 +37,7 @@
  * Generates a wps_config structure which is passed to wps_init() to create
  * an initial wps_data structure.
  */
-struct wps_data *initialize_wps_data()
+struct wps_data *initialize_wps_data(void)
 {
 	struct wps_config *wpsconf = NULL;
 	struct wps_data *wps = NULL;
