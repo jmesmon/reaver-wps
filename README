@@ -16,6 +16,11 @@ TODO:
 	examine making keys.c a text file we load at runtime. Or at least generate that at build time.
 
 	- port changes from
-		- https://github.com/bdpurcell/bully
+		- https://github.com/bdpurcell/bully (dead?)
 		- https://github.com/mir-ror/reaver-wps-fork
+		- https://github.com/tizzaran/reaver-wps.git
+
+	- check distro patches
+		- gentoo
+		- (others?)
 
