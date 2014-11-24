@@ -32,8 +32,68 @@ endef
 $(eval $(foreach obj,$(obj-tls),$(call DEF_CFLAGS_FOR_TLS,$(obj))))
 ## }
 
+## CRYPTO {
+
+obj-crypto += crypto/aes-cbc.o
+obj-crypto += crypto/aes-ctr.o
+obj-crypto += crypto/aes-eax.o
+obj-crypto += crypto/aes-encblock.o
+obj-crypto += crypto/aes-internal.o
+obj-crypto += crypto/aes-internal-dec.o
+obj-crypto += crypto/aes-internal-enc.o
+obj-crypto += crypto/aes-omac1.o
+obj-crypto += crypto/aes-unwrap.o
+obj-crypto += crypto/aes-wrap.o
+#obj-crypto += crypto/crypto_cryptoapi.o
+#obj-crypto += crypto/crypto_gnutls.o
+obj-crypto += crypto/crypto_internal.o
+obj-crypto += crypto/crypto_internal-cipher.o
+obj-crypto += crypto/crypto_internal-modexp.o
+obj-crypto += crypto/crypto_internal-rsa.o
+#obj-crypto += crypto/crypto_libtomcrypt.o
+#obj-crypto += crypto/crypto_none.o
+#obj-crypto += crypto/crypto_nss.o
+#obj-crypto += crypto/crypto_openssl.o
+obj-crypto += crypto/des-internal.o
+obj-crypto += crypto/dh_group5.o
+obj-crypto += crypto/dh_groups.o
+#obj-crypto += crypto/fips_prf_cryptoapi.o
+#obj-crypto += crypto/fips_prf_gnutls.o
+obj-crypto += crypto/fips_prf_internal.o
+#obj-crypto += crypto/fips_prf_nss.o
+#obj-crypto += crypto/fips_prf_openssl.o
+obj-crypto += crypto/md4-internal.o
+obj-crypto += crypto/md5.o
+obj-crypto += crypto/md5-internal.o
+#obj-crypto += crypto/md5-non-fips.o
+#obj-crypto += crypto/milenage.o
+obj-crypto += crypto/ms_funcs.o
+obj-crypto += crypto/rc4.o
+obj-crypto += crypto/sha1.o
+obj-crypto += crypto/sha1-internal.o
+obj-crypto += crypto/sha1-pbkdf2.o
+obj-crypto += crypto/sha1-tlsprf.o
+obj-crypto += crypto/sha1-tprf.o
+obj-crypto += crypto/sha256.o
+obj-crypto += crypto/sha256-internal.o
+#obj-crypto += crypto/tls_gnutls.o
+obj-crypto += crypto/tls_internal.o
+#obj-crypto += crypto/tls_none.o
+#obj-crypto += crypto/tls_nss.o
+#obj-crypto += crypto/tls_openssl.o
+#obj-crypto += crypto/tls_schannel.o
+
+define DEF_CFLAGS_FOR_CRYPTO
+cflags-$1 += -DCONFIG_TLS_INTERNAL_CLIENT -DCONFIG_TLS_INTERNAL_SERVER
+
+endef
+
+$(eval $(foreach obj,$(obj-crypto),$(call DEF_CFLAGS_FOR_CRYPTO,$(obj))))
+## }
+
+
 ## COMMON
-obj-common = $(obj-tls) $(obj-wps) $(obj-utils) crypto/libcrypto.a \
+obj-common = $(obj-tls) $(obj-wps) $(obj-utils) $(obj-crypto) \
 		libwps.o argsparser.o globule.o init.o sigint.o	\
 		sigalrm.o misc.o cracker.o 80211.o iface.o crc.o builder.o	\
 		session.o pins.o keys.o sql.o exchange.o send.o
@@ -58,8 +118,6 @@ ALL_CFLAGS  += $(PCAP_CFLAGS)  $(SQLITE3_CFLAGS)  $(LIBIW_CFLAGS)
 ALL_LDFLAGS += $(PCAP_LDFLAGS) $(SQLITE3_LDFLAGS) $(LIBIW_LDFLAGS)
 
 include base.mk
-
-$(eval $(call sub-make,crypto/libcrypto.a))
 
 install: reaver.db
 	mkdir -p $(CONFDIR); \
