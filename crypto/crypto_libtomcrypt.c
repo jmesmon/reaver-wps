@@ -339,7 +339,7 @@ struct crypto_cipher * crypto_cipher_init(enum crypto_cipher_alg alg,
 			return NULL;
 		}
 		ctx->u.rc4.keylen = key_len;
-		os_memcpy(ctx->u.rc4.key, key, key_len);
+		memcpy(ctx->u.rc4.key, key, key_len);
 	} else {
 		res = cbc_start(idx, iv, key, key_len, 0, &ctx->u.cbc);
 		if (res != CRYPT_OK) {
@@ -360,7 +360,7 @@ int crypto_cipher_encrypt(struct crypto_cipher *ctx, const u8 *plain,
 
 	if (ctx->rc4) {
 		if (plain != crypt)
-			os_memcpy(crypt, plain, len);
+			memcpy(crypt, plain, len);
 		rc4_skip(ctx->u.rc4.key, ctx->u.rc4.keylen,
 			 ctx->u.rc4.used_bytes, crypt, len);
 		ctx->u.rc4.used_bytes += len;
@@ -384,7 +384,7 @@ int crypto_cipher_decrypt(struct crypto_cipher *ctx, const u8 *crypt,
 
 	if (ctx->rc4) {
 		if (plain != crypt)
-			os_memcpy(plain, crypt, len);
+			memcpy(plain, crypt, len);
 		rc4_skip(ctx->u.rc4.key, ctx->u.rc4.keylen,
 			 ctx->u.rc4.used_bytes, plain, len);
 		ctx->u.rc4.used_bytes += len;
@@ -546,7 +546,7 @@ static int pkcs1_generate_encryption_block(u8 block_type, size_t modlen,
 		return -1;
 	}
 	*pos++ = 0x00;
-	os_memcpy(pos, in, inlen); /* D */
+	memcpy(pos, in, inlen); /* D */
 
 	return 0;
 }

@@ -208,7 +208,7 @@ void des_encrypt(const u8 *clear, const u8 *key, u8 *cypher)
 		return;
 	}
 
-	os_memcpy(cypher, clear, 8);
+	memcpy(cypher, clear, 8);
 	dlen = 8;
 	if (!CryptEncrypt(ckey, 0, FALSE, 0, cypher, &dlen, 8)) {
 		wpa_printf(MSG_DEBUG, "CryptoAPI: CryptEncrypt failed: %d",
@@ -257,7 +257,7 @@ void * aes_encrypt_init(const u8 *key, size_t len)
 	key_blob.hdr.reserved = 0;
 	key_blob.hdr.aiKeyAlg = CALG_AES_128;
 	key_blob.len = len;
-	os_memcpy(key_blob.key, key, len);
+	memcpy(key_blob.key, key, len);
 
 	akey = os_zalloc(sizeof(*akey));
 	if (akey == NULL)
@@ -299,7 +299,7 @@ void aes_encrypt(void *ctx, const u8 *plain, u8 *crypt)
 	struct aes_context *akey = ctx;
 	DWORD dlen;
 
-	os_memcpy(crypt, plain, 16);
+	memcpy(crypt, plain, 16);
 	dlen = 16;
 	if (!CryptEncrypt(akey->ckey, 0, FALSE, 0, crypt, &dlen, 16)) {
 		wpa_printf(MSG_DEBUG, "CryptoAPI: CryptEncrypt failed: %d",
@@ -331,7 +331,7 @@ void aes_decrypt(void *ctx, const u8 *crypt, u8 *plain)
 	struct aes_context *akey = ctx;
 	DWORD dlen;
 
-	os_memcpy(plain, crypt, 16);
+	memcpy(plain, crypt, 16);
 	dlen = 16;
 
 	if (!CryptDecrypt(akey->ckey, 0, FALSE, 0, plain, &dlen)) {
@@ -390,7 +390,7 @@ struct crypto_hash * crypto_hash_init(enum crypto_hash_alg alg, const u8 *key,
 		key_blob.len = key_len;
 		if (key_len > sizeof(key_blob.key))
 			return NULL;
-		os_memcpy(key_blob.key, key, key_len);
+		memcpy(key_blob.key, key, key_len);
 		break;
 	default:
 		return NULL;
@@ -528,7 +528,7 @@ struct crypto_cipher * crypto_cipher_init(enum crypto_cipher_alg alg,
 	key_blob.len = key_len;
 	if (key_len > sizeof(key_blob.key))
 		return NULL;
-	os_memcpy(key_blob.key, key, key_len);
+	memcpy(key_blob.key, key, key_len);
 
 	switch (alg) {
 	case CRYPTO_CIPHER_ALG_AES:
@@ -598,7 +598,7 @@ int crypto_cipher_encrypt(struct crypto_cipher *ctx, const u8 *plain,
 {
 	DWORD dlen;
 
-	os_memcpy(crypt, plain, len);
+	memcpy(crypt, plain, len);
 	dlen = len;
 	if (!CryptEncrypt(ctx->key, 0, FALSE, 0, crypt, &dlen, len)) {
  		cryptoapi_report_error("CryptEncrypt");
@@ -615,7 +615,7 @@ int crypto_cipher_decrypt(struct crypto_cipher *ctx, const u8 *crypt,
 {
 	DWORD dlen;
 
-	os_memcpy(plain, crypt, len);
+	memcpy(plain, crypt, len);
 	dlen = len;
 	if (!CryptDecrypt(ctx->key, 0, FALSE, 0, plain, &dlen)) {
  		cryptoapi_report_error("CryptDecrypt");
@@ -718,7 +718,7 @@ int crypto_public_key_encrypt_pkcs1_v15(struct crypto_public_key *key,
 	if (tmp == NULL)
 		return -1;
 
-	os_memcpy(tmp, in, inlen);
+	memcpy(tmp, in, inlen);
 	clen = inlen;
 	if (!CryptEncrypt(key->rsa, 0, TRUE, 0, tmp, &clen, *outlen)) {
 		wpa_printf(MSG_DEBUG, "CryptoAPI: Failed to encrypt using "

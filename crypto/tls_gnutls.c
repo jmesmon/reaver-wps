@@ -251,7 +251,7 @@ static ssize_t tls_pull_func(gnutls_transport_ptr ptr, void *buf,
 	end = wpabuf_head_u8(conn->pull_buf) + wpabuf_len(conn->pull_buf);
 	if ((size_t) (end - conn->pull_buf_offset) < len)
 		len = end - conn->pull_buf_offset;
-	os_memcpy(buf, conn->pull_buf_offset, len);
+	memcpy(buf, conn->pull_buf_offset, len);
 	conn->pull_buf_offset += len;
 	if (conn->pull_buf_offset == end) {
 		wpa_printf(MSG_DEBUG, "%s - pull_buf consumed", __func__);
@@ -1435,7 +1435,7 @@ int tls_connection_ia_permute_inner_secret(void *tls_ctx,
 		conn->session_keys = os_malloc(key_len);
 		if (conn->session_keys == NULL)
 			return -1;
-		os_memcpy(conn->session_keys, key, key_len);
+		memcpy(conn->session_keys, key, key_len);
 		conn->session_keys_len = key_len;
 	} else {
 		conn->session_keys = NULL;

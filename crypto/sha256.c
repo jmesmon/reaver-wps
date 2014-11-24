@@ -62,7 +62,7 @@ void hmac_sha256_vector(const u8 *key, size_t key_len, size_t num_elem,
 
 	/* start out by storing key in ipad */
 	memset(k_pad, 0, sizeof(k_pad));
-	os_memcpy(k_pad, key, key_len);
+	memcpy(k_pad, key, key_len);
 	/* XOR key with ipad values */
 	for (i = 0; i < 64; i++)
 		k_pad[i] ^= 0x36;
@@ -77,7 +77,7 @@ void hmac_sha256_vector(const u8 *key, size_t key_len, size_t num_elem,
 	sha256_vector(1 + num_elem, _addr, _len, mac);
 
 	memset(k_pad, 0, sizeof(k_pad));
-	os_memcpy(k_pad, key, key_len);
+	memcpy(k_pad, key, key_len);
 	/* XOR key with opad values */
 	for (i = 0; i < 64; i++)
 		k_pad[i] ^= 0x5c;
@@ -149,7 +149,7 @@ void sha256_prf(const u8 *key, size_t key_len, const char *label,
 			pos += SHA256_MAC_LEN;
 		} else {
 			hmac_sha256_vector(key, key_len, 4, addr, len, hash);
-			os_memcpy(&buf[pos], hash, plen);
+			memcpy(&buf[pos], hash, plen);
 			break;
 		}
 		counter++;

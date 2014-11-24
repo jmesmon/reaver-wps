@@ -164,8 +164,8 @@ static struct wps_registrar_device * wps_device_get(struct wps_registrar *reg,
 static void wps_device_clone_data(struct wps_device_data *dst,
 				  struct wps_device_data *src)
 {
-	os_memcpy(dst->mac_addr, src->mac_addr, ETH_ALEN);
-	os_memcpy(dst->pri_dev_type, src->pri_dev_type, WPS_DEV_TYPE_LEN);
+	memcpy(dst->mac_addr, src->mac_addr, ETH_ALEN);
+	memcpy(dst->pri_dev_type, src->pri_dev_type, WPS_DEV_TYPE_LEN);
 
 #define WPS_STRDUP(n) \
 	os_free(dst->n); \
@@ -195,7 +195,7 @@ int wps_device_store(struct wps_registrar *reg,
 	}
 
 	wps_device_clone_data(&d->dev, dev);
-	os_memcpy(d->uuid, uuid, WPS_UUID_LEN);
+	memcpy(d->uuid, uuid, WPS_UUID_LEN);
 
 	return 0;
 }
@@ -227,9 +227,9 @@ static void wps_registrar_add_pbc_session(struct wps_registrar *reg,
 		pbc = os_zalloc(sizeof(*pbc));
 		if (pbc == NULL)
 			return;
-		os_memcpy(pbc->addr, addr, ETH_ALEN);
+		memcpy(pbc->addr, addr, ETH_ALEN);
 		if (uuid_e)
-			os_memcpy(pbc->uuid_e, uuid_e, WPS_UUID_LEN);
+			memcpy(pbc->uuid_e, uuid_e, WPS_UUID_LEN);
 	}
 
 	pbc->next = reg->pbc_sessions;
@@ -502,13 +502,13 @@ int wps_registrar_add_pin(struct wps_registrar *reg, const u8 *uuid,
 	if (uuid == NULL)
 		p->wildcard_uuid = 1;
 	else
-		os_memcpy(p->uuid, uuid, WPS_UUID_LEN);
+		memcpy(p->uuid, uuid, WPS_UUID_LEN);
 	p->pin = os_malloc(pin_len);
 	if (p->pin == NULL) {
 		os_free(p);
 		return -1;
 	}
-	os_memcpy(p->pin, pin, pin_len);
+	memcpy(p->pin, pin, pin_len);
 	p->pin_len = pin_len;
 
 	if (timeout) {
@@ -615,7 +615,7 @@ static const u8 * wps_registrar_get_pin(struct wps_registrar *reg,
 				wpa_printf(MSG_DEBUG, "WPS: Found a wildcard "
 					   "PIN. Assigned it for this UUID-E");
 				pin->wildcard_uuid = 2;
-				os_memcpy(pin->uuid, uuid, WPS_UUID_LEN);
+				memcpy(pin->uuid, uuid, WPS_UUID_LEN);
 				found = pin;
 				break;
 			}
@@ -777,7 +777,7 @@ void wps_registrar_probe_req_rx(struct wps_registrar *reg, const u8 *addr,
 		if (attr.dev_name) {
 			dev_name = os_zalloc(attr.dev_name_len + 1);
 			if (dev_name) {
-				os_memcpy(dev_name, attr.dev_name,
+				memcpy(dev_name, attr.dev_name,
 					  attr.dev_name_len);
 			}
 		}
@@ -991,7 +991,7 @@ static int wps_get_dev_password(struct wps_data *wps)
 	wps->dev_password = os_malloc(pin_len);
 	if (wps->dev_password == NULL)
 		return -1;
-	os_memcpy(wps->dev_password, pin, pin_len);
+	memcpy(wps->dev_password, pin, pin_len);
 	wps->dev_password_len = pin_len;
 
 	return 0;
@@ -1170,12 +1170,12 @@ int wps_build_cred(struct wps_data *wps, struct wpabuf *msg)
 
 	wpa_printf(MSG_DEBUG, "WPS:  * Credential");
 	if (wps->use_cred) {
-		os_memcpy(&wps->cred, wps->use_cred, sizeof(wps->cred));
+		memcpy(&wps->cred, wps->use_cred, sizeof(wps->cred));
 		goto use_provided;
 	}
 	memset(&wps->cred, 0, sizeof(wps->cred));
 
-	os_memcpy(wps->cred.ssid, wps->wps->ssid, wps->wps->ssid_len);
+	memcpy(wps->cred.ssid, wps->wps->ssid, wps->wps->ssid_len);
 	wps->cred.ssid_len = wps->wps->ssid_len;
 
 	/* Select the best authentication and encryption type */
@@ -1220,7 +1220,7 @@ int wps_build_cred(struct wps_data *wps, struct wpabuf *msg)
 	/*
 	 * Set MAC address in the Credential to be the Enrollee's MAC address
 	 */
-	os_memcpy(wps->cred.mac_addr, wps->mac_addr_e, ETH_ALEN);
+	memcpy(wps->cred.mac_addr, wps->mac_addr_e, ETH_ALEN);
 
 	if (wps->wps->wps_state == WPS_STATE_NOT_CONFIGURED && wps->wps->ap &&
 	    !wps->wps->registrar->disable_auto_conf) {
@@ -1238,16 +1238,16 @@ int wps_build_cred(struct wps_data *wps, struct wpabuf *msg)
 			wps->new_psk_len--;
 		wpa_hexdump_ascii_key(MSG_DEBUG, "WPS: Generated passphrase",
 				      wps->new_psk, wps->new_psk_len);
-		os_memcpy(wps->cred.key, wps->new_psk, wps->new_psk_len);
+		memcpy(wps->cred.key, wps->new_psk, wps->new_psk_len);
 		wps->cred.key_len = wps->new_psk_len;
 	} else if (wps->use_psk_key && wps->wps->psk_set) {
 		char hex[65];
 		wpa_printf(MSG_DEBUG, "WPS: Use PSK format for Network Key");
 		wpa_snprintf_hex(hex, sizeof(hex), wps->wps->psk, 32);
-		os_memcpy(wps->cred.key, hex, 32 * 2);
+		memcpy(wps->cred.key, hex, 32 * 2);
 		wps->cred.key_len = 32 * 2;
 	} else if (wps->wps->network_key) {
-		os_memcpy(wps->cred.key, wps->wps->network_key,
+		memcpy(wps->cred.key, wps->wps->network_key,
 			  wps->wps->network_key_len);
 		wps->cred.key_len = wps->wps->network_key_len;
 	} else if (wps->auth_type & (WPS_AUTH_WPAPSK | WPS_AUTH_WPA2PSK)) {
@@ -1267,7 +1267,7 @@ int wps_build_cred(struct wps_data *wps, struct wpabuf *msg)
 				wps->new_psk, wps->new_psk_len);
 		wpa_snprintf_hex(hex, sizeof(hex), wps->new_psk,
 				 wps->new_psk_len);
-		os_memcpy(wps->cred.key, hex, wps->new_psk_len * 2);
+		memcpy(wps->cred.key, hex, wps->new_psk_len * 2);
 		wps->cred.key_len = wps->new_psk_len * 2;
 	}
 
@@ -1577,7 +1577,7 @@ static int wps_process_enrollee_nonce(struct wps_data *wps, const u8 *e_nonce)
 		return -1;
 	}
 
-	os_memcpy(wps->nonce_e, e_nonce, WPS_NONCE_LEN);
+	memcpy(wps->nonce_e, e_nonce, WPS_NONCE_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: Enrollee Nonce",
 		    wps->nonce_e, WPS_NONCE_LEN);
 
@@ -1608,7 +1608,7 @@ static int wps_process_uuid_e(struct wps_data *wps, const u8 *uuid_e)
 		return -1;
 	}
 
-	os_memcpy(wps->uuid_e, uuid_e, WPS_UUID_LEN);
+	memcpy(wps->uuid_e, uuid_e, WPS_UUID_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: UUID-E", wps->uuid_e, WPS_UUID_LEN);
 
 	return 0;
@@ -1636,7 +1636,7 @@ static int wps_process_e_hash1(struct wps_data *wps, const u8 *e_hash1)
 		return -1;
 	}
 
-	os_memcpy(wps->peer_hash1, e_hash1, WPS_HASH_LEN);
+	memcpy(wps->peer_hash1, e_hash1, WPS_HASH_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: E-Hash1", wps->peer_hash1, WPS_HASH_LEN);
 
 	return 0;
@@ -1650,7 +1650,7 @@ static int wps_process_e_hash2(struct wps_data *wps, const u8 *e_hash2)
 		return -1;
 	}
 
-	os_memcpy(wps->peer_hash2, e_hash2, WPS_HASH_LEN);
+	memcpy(wps->peer_hash2, e_hash2, WPS_HASH_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: E-Hash2", wps->peer_hash2, WPS_HASH_LEN);
 
 	return 0;
@@ -1705,8 +1705,8 @@ static int wps_process_mac_addr(struct wps_data *wps, const u8 *mac_addr)
 
 	wpa_printf(MSG_DEBUG, "WPS: Enrollee MAC Address " MACSTR,
 		   MAC2STR(mac_addr));
-	os_memcpy(wps->mac_addr_e, mac_addr, ETH_ALEN);
-	os_memcpy(wps->peer_dev.mac_addr, mac_addr, ETH_ALEN);
+	memcpy(wps->mac_addr_e, mac_addr, ETH_ALEN);
+	memcpy(wps->peer_dev.mac_addr, mac_addr, ETH_ALEN);
 
 	return 0;
 }
@@ -2136,12 +2136,12 @@ static void wps_sta_cred_cb(struct wps_data *wps)
 static void wps_cred_update(struct wps_credential *dst,
 			    struct wps_credential *src)
 {
-	os_memcpy(dst->ssid, src->ssid, sizeof(dst->ssid));
+	memcpy(dst->ssid, src->ssid, sizeof(dst->ssid));
 	dst->ssid_len = src->ssid_len;
 	dst->auth_type = src->auth_type;
 	dst->encr_type = src->encr_type;
 	dst->key_idx = src->key_idx;
-	os_memcpy(dst->key, src->key, sizeof(dst->key));
+	memcpy(dst->key, src->key, sizeof(dst->key));
 	dst->key_len = src->key_len;
 }
 
@@ -2558,11 +2558,11 @@ static enum wps_process_res wps_process_wsc_done(struct wps_data *wps,
 			   "on first Enrollee connection");
 
 		memset(&cred, 0, sizeof(cred));
-		os_memcpy(cred.ssid, wps->wps->ssid, wps->wps->ssid_len);
+		memcpy(cred.ssid, wps->wps->ssid, wps->wps->ssid_len);
 		cred.ssid_len = wps->wps->ssid_len;
 		cred.auth_type = WPS_AUTH_WPAPSK | WPS_AUTH_WPA2PSK;
 		cred.encr_type = WPS_ENCR_TKIP | WPS_ENCR_AES;
-		os_memcpy(cred.key, wps->new_psk, wps->new_psk_len);
+		memcpy(cred.key, wps->new_psk, wps->new_psk_len);
 		cred.key_len = wps->new_psk_len;
 
 		wps->wps->wps_state = WPS_STATE_CONFIGURED;

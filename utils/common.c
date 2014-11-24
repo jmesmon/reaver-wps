@@ -160,9 +160,9 @@ void wpa_get_ntp_timestamp(u8 *buf)
 	usec = now.usec;
 	usec = 4295 * usec - (usec >> 5) - (usec >> 9);
 	tmp = host_to_be32(sec);
-	os_memcpy(buf, (u8 *) &tmp, 4);
+	memcpy(buf, (u8 *) &tmp, 4);
 	tmp = host_to_be32(usec);
-	os_memcpy(buf + 4, (u8 *) &tmp, 4);
+	memcpy(buf + 4, (u8 *) &tmp, 4);
 }
 
 
@@ -347,7 +347,7 @@ const char * wpa_ssid_txt(const u8 *ssid, size_t ssid_len)
 
 	if (ssid_len > 32)
 		ssid_len = 32;
-	os_memcpy(ssid_txt, ssid, ssid_len);
+	memcpy(ssid_txt, ssid, ssid_len);
 	ssid_txt[ssid_len] = '\0';
 	for (pos = ssid_txt; *pos != '\0'; pos++) {
 		if ((u8) *pos < 32 || (u8) *pos >= 127)

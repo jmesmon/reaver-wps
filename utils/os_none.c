@@ -121,7 +121,7 @@ void os_free(void *ptr)
 }
 
 
-void * os_memcpy(void *dest, const void *src, size_t n)
+void * memcpy(void *dest, const void *src, size_t n)
 {
 	return dest;
 }

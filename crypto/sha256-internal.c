@@ -176,7 +176,7 @@ static int sha256_process(struct sha256_state *md, const unsigned char *in,
 			inlen -= block_size;
 		} else {
 			n = MIN(inlen, (block_size - md->curlen));
-			os_memcpy(md->buf + md->curlen, in, n);
+			memcpy(md->buf + md->curlen, in, n);
 			md->curlen += n;
 			in += n;
 			inlen -= n;

@@ -2812,7 +2812,7 @@ static int tls_session_ticket_ext_cb(SSL *s, const unsigned char *data,
 	if (conn->session_ticket == NULL)
 		return 0;
 
-	os_memcpy(conn->session_ticket, data, len);
+	memcpy(conn->session_ticket, data, len);
 	conn->session_ticket_len = len;
 
 	return 1;
@@ -2840,7 +2840,7 @@ static void tls_hello_ext_cb(SSL *s, int client_server, int type,
 		if (conn->session_ticket == NULL)
 			return;
 
-		os_memcpy(conn->session_ticket, data, len);
+		memcpy(conn->session_ticket, data, len);
 		conn->session_ticket_len = len;
 	}
 }
@@ -2865,7 +2865,7 @@ static int tls_hello_ext_cb(SSL *s, TLS_EXTENSION *ext, void *arg)
 		if (conn->session_ticket == NULL)
 			return SSL_AD_INTERNAL_ERROR;
 
-		os_memcpy(conn->session_ticket, ext->data, ext->length);
+		memcpy(conn->session_ticket, ext->data, ext->length);
 		conn->session_ticket_len = ext->length;
 	}
 

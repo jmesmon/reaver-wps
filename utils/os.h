@@ -223,7 +223,7 @@ void * os_realloc(void *ptr, size_t size);
 void os_free(void *ptr);
 
 /**
- * os_memcpy - Copy memory area
+ * memcpy - Copy memory area
  * @dest: Destination
  * @src: Source
  * @n: Number of bytes to copy
@@ -232,7 +232,7 @@ void os_free(void *ptr);
  * The memory areas src and dst must not overlap. os_memmove() can be used with
  * overlapping memory.
  */
-void * os_memcpy(void *dest, const void *src, size_t n);
+void * memcpy(void *dest, const void *src, size_t n);
 
 /**
  * os_memmove - Copy memory area
@@ -403,8 +403,8 @@ char * os_strdup(const char *s);
 #endif
 #endif /* WPA_TRACE */
 
-#ifndef os_memcpy
-#define os_memcpy(d, s, n) memcpy((d), (s), (n))
+#ifndef memcpy
+#define memcpy(d, s, n) memcpy((d), (s), (n))
 #endif
 #ifndef os_memmove
 #define os_memmove(d, s, n) memmove((d), (s), (n))

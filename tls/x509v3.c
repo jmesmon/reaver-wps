@@ -286,7 +286,7 @@ static int x509_parse_public_key(const u8 *buf, size_t len,
 			   "public key");
 		return -1;
 	}
-	os_memcpy(cert->public_key, pos + 1, hdr.length - 1);
+	memcpy(cert->public_key, pos + 1, hdr.length - 1);
 	cert->public_key_len = hdr.length - 1;
 	wpa_hexdump(MSG_MSGDUMP, "X509: subjectPublicKey",
 		    cert->public_key, cert->public_key_len);
@@ -422,7 +422,7 @@ static int x509_parse_name(const u8 *buf, size_t len, struct x509_name *name,
 				x509_free_name(name);
 				return -1;
 			}
-			os_memcpy(name->email, hdr.payload, hdr.length);
+			memcpy(name->email, hdr.payload, hdr.length);
 			name->email[hdr.length] = '\0';
 			continue;
 		} else if (oid.len == 7 &&
@@ -454,7 +454,7 @@ static int x509_parse_name(const u8 *buf, size_t len, struct x509_name *name,
 			x509_free_name(name);
 			return -1;
 		}
-		os_memcpy(val, hdr.payload, hdr.length);
+		memcpy(val, hdr.payload, hdr.length);
 		val[hdr.length] = '\0';
 		if (os_strlen(val) != hdr.length) {
 			wpa_printf(MSG_INFO, "X509: Reject certificate with "
@@ -859,7 +859,7 @@ static int x509_parse_alt_name_rfc8222(struct x509_name *name,
 	name->alt_email = os_zalloc(len + 1);
 	if (name->alt_email == NULL)
 		return -1;
-	os_memcpy(name->alt_email, pos, len);
+	memcpy(name->alt_email, pos, len);
 	if (os_strlen(name->alt_email) != len) {
 		wpa_printf(MSG_INFO, "X509: Reject certificate with "
 			   "embedded NUL byte in rfc822Name (%s[NUL])",
@@ -881,7 +881,7 @@ static int x509_parse_alt_name_dns(struct x509_name *name,
 	name->dns = os_zalloc(len + 1);
 	if (name->dns == NULL)
 		return -1;
-	os_memcpy(name->dns, pos, len);
+	memcpy(name->dns, pos, len);
 	if (os_strlen(name->dns) != len) {
 		wpa_printf(MSG_INFO, "X509: Reject certificate with "
 			   "embedded NUL byte in dNSName (%s[NUL])",
@@ -905,7 +905,7 @@ static int x509_parse_alt_name_uri(struct x509_name *name,
 	name->uri = os_zalloc(len + 1);
 	if (name->uri == NULL)
 		return -1;
-	os_memcpy(name->uri, pos, len);
+	memcpy(name->uri, pos, len);
 	if (os_strlen(name->uri) != len) {
 		wpa_printf(MSG_INFO, "X509: Reject certificate with "
 			   "embedded NUL byte in uniformResourceIdentifier "
@@ -927,7 +927,7 @@ static int x509_parse_alt_name_ip(struct x509_name *name,
 	name->ip = os_malloc(len);
 	if (name->ip == NULL)
 		return -1;
-	os_memcpy(name->ip, pos, len);
+	memcpy(name->ip, pos, len);
 	name->ip_len = len;
 	return 0;
 }
@@ -1487,7 +1487,7 @@ struct x509_certificate * x509_certificate_parse(const u8 *buf, size_t len)
 	cert = os_zalloc(sizeof(*cert) + len);
 	if (cert == NULL)
 		return NULL;
-	os_memcpy(cert + 1, buf, len);
+	memcpy(cert + 1, buf, len);
 	cert->cert_start = (u8 *) (cert + 1);
 	cert->cert_len = len;
 
@@ -1568,7 +1568,7 @@ struct x509_certificate * x509_certificate_parse(const u8 *buf, size_t len)
 		x509_certificate_free(cert);
 		return NULL;
 	}
-	os_memcpy(cert->sign_value, pos + 1, hdr.length - 1);
+	memcpy(cert->sign_value, pos + 1, hdr.length - 1);
 	cert->sign_value_len = hdr.length - 1;
 	wpa_hexdump(MSG_MSGDUMP, "X509: signature",
 		    cert->sign_value, cert->sign_value_len);

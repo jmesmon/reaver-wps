@@ -149,9 +149,9 @@ char * os_rel2abs_path(const char *rel_path)
 	ret_len = cwd_len + 1 + rel_len + 1;
 	ret = os_malloc(ret_len);
 	if (ret) {
-		os_memcpy(ret, cwd, cwd_len);
+		memcpy(ret, cwd, cwd_len);
 		ret[cwd_len] = '/';
-		os_memcpy(ret + cwd_len + 1, rel_path, rel_len);
+		memcpy(ret + cwd_len + 1, rel_path, rel_len);
 		ret[ret_len - 1] = '\0';
 	}
 	os_free(buf);
@@ -245,7 +245,7 @@ void os_free(void *ptr)
 }
 
 
-void * os_memcpy(void *dest, const void *src, size_t n)
+void * memcpy(void *dest, const void *src, size_t n)
 {
 	char *d = dest;
 	const char *s = src;
@@ -258,7 +258,7 @@ void * os_memcpy(void *dest, const void *src, size_t n)
 void * os_memmove(void *dest, const void *src, size_t n)
 {
 	if (dest < src)
-		os_memcpy(dest, src, n);
+		memcpy(dest, src, n);
 	else {
 		/* overlapping areas */
 		char *d = (char *) dest + n;
@@ -307,7 +307,7 @@ char * os_strdup(const char *s)
 	len = os_strlen(s);
 	res = os_malloc(len + 1);
 	if (res)
-		os_memcpy(res, s, len + 1);
+		memcpy(res, s, len + 1);
 	return res;
 }
 

@@ -63,10 +63,10 @@ int sha1_t_prf(const u8 *key, size_t key_len, const char *label,
 		if (hmac_sha1_vector(key, key_len, 5, addr, len, hash))
 			return -1;
 		if (plen >= SHA1_MAC_LEN) {
-			os_memcpy(&buf[pos], hash, SHA1_MAC_LEN);
+			memcpy(&buf[pos], hash, SHA1_MAC_LEN);
 			pos += SHA1_MAC_LEN;
 		} else {
-			os_memcpy(&buf[pos], hash, plen);
+			memcpy(&buf[pos], hash, plen);
 			break;
 		}
 		len[0] = SHA1_MAC_LEN;

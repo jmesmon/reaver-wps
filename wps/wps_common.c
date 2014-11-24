@@ -53,11 +53,11 @@ void wps_kdf(const u8 *key, const u8 *label_prefix, size_t label_prefix_len,
 		WPA_PUT_BE32(i_buf, i);
 		hmac_sha256_vector(key, SHA256_MAC_LEN, 4, addr, len, hash);
 		if (i < iter) {
-			os_memcpy(opos, hash, SHA256_MAC_LEN);
+			memcpy(opos, hash, SHA256_MAC_LEN);
 			opos += SHA256_MAC_LEN;
 			left -= SHA256_MAC_LEN;
 		} else
-			os_memcpy(opos, hash, left);
+			memcpy(opos, hash, left);
 	}
 }
 
@@ -115,9 +115,9 @@ int wps_derive_keys(struct wps_data *wps)
 
 	wps_kdf(kdk, NULL, 0, "Wi-Fi Easy and Secure Key Derivation",
 		keys, sizeof(keys));
-	os_memcpy(wps->authkey, keys, WPS_AUTHKEY_LEN);
-	os_memcpy(wps->keywrapkey, keys + WPS_AUTHKEY_LEN, WPS_KEYWRAPKEY_LEN);
-	os_memcpy(wps->emsk, keys + WPS_AUTHKEY_LEN + WPS_KEYWRAPKEY_LEN,
+	memcpy(wps->authkey, keys, WPS_AUTHKEY_LEN);
+	memcpy(wps->keywrapkey, keys + WPS_AUTHKEY_LEN, WPS_KEYWRAPKEY_LEN);
+	memcpy(wps->emsk, keys + WPS_AUTHKEY_LEN + WPS_KEYWRAPKEY_LEN,
 		  WPS_EMSK_LEN);
 
 	wpa_hexdump_key(MSG_DEBUG, "WPS: AuthKey",
@@ -137,11 +137,11 @@ void wps_derive_psk(struct wps_data *wps, const u8 *dev_passwd,
 
 	hmac_sha256(wps->authkey, WPS_AUTHKEY_LEN, dev_passwd,
 		    (dev_passwd_len + 1) / 2, hash);
-	os_memcpy(wps->psk1, hash, WPS_PSK_LEN);
+	memcpy(wps->psk1, hash, WPS_PSK_LEN);
 	hmac_sha256(wps->authkey, WPS_AUTHKEY_LEN,
 		    dev_passwd + (dev_passwd_len + 1) / 2,
 		    dev_passwd_len / 2, hash);
-	os_memcpy(wps->psk2, hash, WPS_PSK_LEN);
+	memcpy(wps->psk2, hash, WPS_PSK_LEN);
 
 	wpa_hexdump_ascii_key(MSG_DEBUG, "WPS: Device Password",
 			      dev_passwd, dev_passwd_len);
@@ -587,7 +587,7 @@ void uuid_gen_mac_addr(const u8 *mac_addr, u8 *uuid)
 	addr[1] = mac_addr;
 	len[1] = 6;
 	sha1_vector(2, addr, len, hash);
-	os_memcpy(uuid, hash, 16);
+	memcpy(uuid, hash, 16);
 
 	/* Version: 5 = named-based version using SHA-1 */
 	uuid[6] = (5 << 4) | (uuid[6] & 0x0f);

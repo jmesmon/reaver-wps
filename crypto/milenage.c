@@ -52,9 +52,9 @@ int milenage_f1(const u8 *opc, const u8 *k, const u8 *_rand,
 		return -1;
 
 	/* tmp2 = IN1 = SQN || AMF || SQN || AMF */
-	os_memcpy(tmp2, sqn, 6);
-	os_memcpy(tmp2 + 6, amf, 2);
-	os_memcpy(tmp2 + 8, tmp2, 8);
+	memcpy(tmp2, sqn, 6);
+	memcpy(tmp2 + 6, amf, 2);
+	memcpy(tmp2 + 8, tmp2, 8);
 
 	/* OUT1 = E_K(TEMP XOR rot(IN1 XOR OP_C, r1) XOR c1) XOR OP_C */
 
@@ -72,9 +72,9 @@ int milenage_f1(const u8 *opc, const u8 *k, const u8 *_rand,
 	for (i = 0; i < 16; i++)
 		tmp1[i] ^= opc[i];
 	if (mac_a)
-		os_memcpy(mac_a, tmp1, 8); /* f1 */
+		memcpy(mac_a, tmp1, 8); /* f1 */
 	if (mac_s)
-		os_memcpy(mac_s, tmp1 + 8, 8); /* f1* */
+		memcpy(mac_s, tmp1 + 8, 8); /* f1* */
 	return 0;
 }
 
@@ -119,9 +119,9 @@ int milenage_f2345(const u8 *opc, const u8 *k, const u8 *_rand,
 	for (i = 0; i < 16; i++)
 		tmp3[i] ^= opc[i];
 	if (res)
-		os_memcpy(res, tmp3 + 8, 8); /* f2 */
+		memcpy(res, tmp3 + 8, 8); /* f2 */
 	if (ak)
-		os_memcpy(ak, tmp3, 6); /* f5 */
+		memcpy(ak, tmp3, 6); /* f5 */
 
 	/* f3 */
 	if (ck) {
@@ -197,8 +197,8 @@ void milenage_generate(const u8 *opc, const u8 *amf, const u8 *k,
 	/* AUTN = (SQN ^ AK) || AMF || MAC */
 	for (i = 0; i < 6; i++)
 		autn[i] = sqn[i] ^ ak[i];
-	os_memcpy(autn + 6, amf, 2);
-	os_memcpy(autn + 8, mac_a, 8);
+	memcpy(autn + 6, amf, 2);
+	memcpy(autn + 8, mac_a, 8);
 }
 
 
@@ -250,7 +250,7 @@ int gsm_milenage(const u8 *opc, const u8 *k, const u8 *_rand, u8 *sres, u8 *kc)
 		kc[i] = ck[i] ^ ck[i + 8] ^ ik[i] ^ ik[i + 8];
 
 #ifdef GSM_MILENAGE_ALT_SRES
-	os_memcpy(sres, res, 4);
+	memcpy(sres, res, 4);
 #else /* GSM_MILENAGE_ALT_SRES */
 	for (i = 0; i < 4; i++)
 		sres[i] = res[i] ^ res[i + 4];

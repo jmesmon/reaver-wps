@@ -66,7 +66,7 @@ struct crypto_cipher * crypto_cipher_init(enum crypto_cipher_alg alg,
 			return NULL;
 		}
 		ctx->u.rc4.keylen = key_len;
-		os_memcpy(ctx->u.rc4.key, key, key_len);
+		memcpy(ctx->u.rc4.key, key, key_len);
 		break;
 	case CRYPTO_CIPHER_ALG_AES:
 		if (key_len > sizeof(ctx->u.aes.cbc)) {
@@ -85,7 +85,7 @@ struct crypto_cipher * crypto_cipher_init(enum crypto_cipher_alg alg,
 			return NULL;
 		}
 		ctx->u.aes.block_size = key_len;
-		os_memcpy(ctx->u.aes.cbc, iv, ctx->u.aes.block_size);
+		memcpy(ctx->u.aes.cbc, iv, ctx->u.aes.block_size);
 		break;
 	case CRYPTO_CIPHER_ALG_3DES:
 		if (key_len != 24) {
@@ -93,7 +93,7 @@ struct crypto_cipher * crypto_cipher_init(enum crypto_cipher_alg alg,
 			return NULL;
 		}
 		des3_key_setup(key, &ctx->u.des3.key);
-		os_memcpy(ctx->u.des3.cbc, iv, 8);
+		memcpy(ctx->u.des3.cbc, iv, 8);
 		break;
 	case CRYPTO_CIPHER_ALG_DES:
 		if (key_len != 8) {
@@ -101,7 +101,7 @@ struct crypto_cipher * crypto_cipher_init(enum crypto_cipher_alg alg,
 			return NULL;
 		}
 		des_key_setup(key, ctx->u.des.ek, ctx->u.des.dk);
-		os_memcpy(ctx->u.des.cbc, iv, 8);
+		memcpy(ctx->u.des.cbc, iv, 8);
 		break;
 	default:
 		os_free(ctx);
@@ -120,7 +120,7 @@ int crypto_cipher_encrypt(struct crypto_cipher *ctx, const u8 *plain,
 	switch (ctx->alg) {
 	case CRYPTO_CIPHER_ALG_RC4:
 		if (plain != crypt)
-			os_memcpy(crypt, plain, len);
+			memcpy(crypt, plain, len);
 		rc4_skip(ctx->u.rc4.key, ctx->u.rc4.keylen,
 			 ctx->u.rc4.used_bytes, crypt, len);
 		ctx->u.rc4.used_bytes += len;
@@ -134,7 +134,7 @@ int crypto_cipher_encrypt(struct crypto_cipher *ctx, const u8 *plain,
 				ctx->u.aes.cbc[j] ^= plain[j];
 			aes_encrypt(ctx->u.aes.ctx_enc, ctx->u.aes.cbc,
 				    ctx->u.aes.cbc);
-			os_memcpy(crypt, ctx->u.aes.cbc,
+			memcpy(crypt, ctx->u.aes.cbc,
 				  ctx->u.aes.block_size);
 			plain += ctx->u.aes.block_size;
 			crypt += ctx->u.aes.block_size;
@@ -149,7 +149,7 @@ int crypto_cipher_encrypt(struct crypto_cipher *ctx, const u8 *plain,
 				ctx->u.des3.cbc[j] ^= plain[j];
 			des3_encrypt(ctx->u.des3.cbc, &ctx->u.des3.key,
 				     ctx->u.des3.cbc);
-			os_memcpy(crypt, ctx->u.des3.cbc, 8);
+			memcpy(crypt, ctx->u.des3.cbc, 8);
 			plain += 8;
 			crypt += 8;
 		}
@@ -163,7 +163,7 @@ int crypto_cipher_encrypt(struct crypto_cipher *ctx, const u8 *plain,
 				ctx->u.des3.cbc[j] ^= plain[j];
 			des_block_encrypt(ctx->u.des.cbc, ctx->u.des.ek,
 					  ctx->u.des.cbc);
-			os_memcpy(crypt, ctx->u.des.cbc, 8);
+			memcpy(crypt, ctx->u.des.cbc, 8);
 			plain += 8;
 			crypt += 8;
 		}
@@ -185,7 +185,7 @@ int crypto_cipher_decrypt(struct crypto_cipher *ctx, const u8 *crypt,
 	switch (ctx->alg) {
 	case CRYPTO_CIPHER_ALG_RC4:
 		if (plain != crypt)
-			os_memcpy(plain, crypt, len);
+			memcpy(plain, crypt, len);
 		rc4_skip(ctx->u.rc4.key, ctx->u.rc4.keylen,
 			 ctx->u.rc4.used_bytes, plain, len);
 		ctx->u.rc4.used_bytes += len;
@@ -195,11 +195,11 @@ int crypto_cipher_decrypt(struct crypto_cipher *ctx, const u8 *crypt,
 			return -1;
 		blocks = len / ctx->u.aes.block_size;
 		for (i = 0; i < blocks; i++) {
-			os_memcpy(tmp, crypt, ctx->u.aes.block_size);
+			memcpy(tmp, crypt, ctx->u.aes.block_size);
 			aes_decrypt(ctx->u.aes.ctx_dec, crypt, plain);
 			for (j = 0; j < ctx->u.aes.block_size; j++)
 				plain[j] ^= ctx->u.aes.cbc[j];
-			os_memcpy(ctx->u.aes.cbc, tmp, ctx->u.aes.block_size);
+			memcpy(ctx->u.aes.cbc, tmp, ctx->u.aes.block_size);
 			plain += ctx->u.aes.block_size;
 			crypt += ctx->u.aes.block_size;
 		}
@@ -209,11 +209,11 @@ int crypto_cipher_decrypt(struct crypto_cipher *ctx, const u8 *crypt,
 			return -1;
 		blocks = len / 8;
 		for (i = 0; i < blocks; i++) {
-			os_memcpy(tmp, crypt, 8);
+			memcpy(tmp, crypt, 8);
 			des3_decrypt(crypt, &ctx->u.des3.key, plain);
 			for (j = 0; j < 8; j++)
 				plain[j] ^= ctx->u.des3.cbc[j];
-			os_memcpy(ctx->u.des3.cbc, tmp, 8);
+			memcpy(ctx->u.des3.cbc, tmp, 8);
 			plain += 8;
 			crypt += 8;
 		}
@@ -223,11 +223,11 @@ int crypto_cipher_decrypt(struct crypto_cipher *ctx, const u8 *crypt,
 			return -1;
 		blocks = len / 8;
 		for (i = 0; i < blocks; i++) {
-			os_memcpy(tmp, crypt, 8);
+			memcpy(tmp, crypt, 8);
 			des_block_decrypt(crypt, ctx->u.des.dk, plain);
 			for (j = 0; j < 8; j++)
 				plain[j] ^= ctx->u.des.cbc[j];
-			os_memcpy(ctx->u.des.cbc, tmp, 8);
+			memcpy(ctx->u.des.cbc, tmp, 8);
 			plain += 8;
 			crypt += 8;
 		}

@@ -220,9 +220,9 @@ char * os_rel2abs_path(const char *rel_path)
 	ret_len = cwd_len + 1 + rel_len + 1;
 	ret = os_malloc(ret_len);
 	if (ret) {
-		os_memcpy(ret, cwd, cwd_len);
+		memcpy(ret, cwd, cwd_len);
 		ret[cwd_len] = '/';
-		os_memcpy(ret + cwd_len + 1, rel_path, rel_len);
+		memcpy(ret + cwd_len + 1, rel_path, rel_len);
 		ret[ret_len - 1] = '\0';
 	}
 	os_free(buf);
@@ -384,7 +384,7 @@ void * os_realloc(void *ptr, size_t size)
 	copy_len = a->len;
 	if (copy_len > size)
 		copy_len = size;
-	os_memcpy(n, a + 1, copy_len);
+	memcpy(n, a + 1, copy_len);
 	os_free(ptr);
 	return n;
 }
@@ -429,7 +429,7 @@ char * os_strdup(const char *s)
 	d = os_malloc(len + 1);
 	if (d == NULL)
 		return NULL;
-	os_memcpy(d, s, len);
+	memcpy(d, s, len);
 	d[len] = '\0';
 	return d;
 }

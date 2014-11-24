@@ -106,7 +106,7 @@ static int pkcs5_get_params(const u8 *enc_alg, size_t enc_alg_len,
 		return -1;
 	}
 	pos = hdr.payload + hdr.length;
-	os_memcpy(params->salt, hdr.payload, hdr.length);
+	memcpy(params->salt, hdr.payload, hdr.length);
 	params->salt_len = hdr.length;
 	wpa_hexdump(MSG_DEBUG, "PKCS #5: salt",
 		    params->salt, params->salt_len);

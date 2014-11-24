@@ -124,7 +124,7 @@ static void MD4Update(MD4_CTX *ctx, const unsigned char *input, size_t len)
 
 	if (len >= need) {
 		if (have != 0) {
-			os_memcpy(ctx->buffer + have, input, need);
+			memcpy(ctx->buffer + have, input, need);
 			MD4Transform(ctx->state, ctx->buffer);
 			input += need;
 			len -= need;
@@ -141,7 +141,7 @@ static void MD4Update(MD4_CTX *ctx, const unsigned char *input, size_t len)
 
 	/* Handle any remaining bytes of data. */
 	if (len != 0)
-		os_memcpy(ctx->buffer + have, input, len);
+		memcpy(ctx->buffer + have, input, len);
 }
 
 /*
@@ -203,7 +203,7 @@ MD4Transform(u32 state[4], const u8 block[MD4_BLOCK_LENGTH])
 	u32 a, b, c, d, in[MD4_BLOCK_LENGTH / 4];
 
 #if BYTE_ORDER == LITTLE_ENDIAN
-	os_memcpy(in, block, sizeof(in));
+	memcpy(in, block, sizeof(in));
 #else
 	for (a = 0; a < MD4_BLOCK_LENGTH / 4; a++) {
 		in[a] = (u32)(

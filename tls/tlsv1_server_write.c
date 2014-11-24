@@ -89,11 +89,11 @@ static int tls_write_server_hello(struct tlsv1_server *conn,
 	WPA_PUT_BE16(pos, TLS_VERSION);
 	pos += 2;
 	/* Random random: uint32 gmt_unix_time, opaque random_bytes */
-	os_memcpy(pos, conn->server_random, TLS_RANDOM_LEN);
+	memcpy(pos, conn->server_random, TLS_RANDOM_LEN);
 	pos += TLS_RANDOM_LEN;
 	/* SessionID session_id */
 	*pos++ = conn->session_id_len;
-	os_memcpy(pos, conn->session_id, conn->session_id_len);
+	memcpy(pos, conn->session_id, conn->session_id_len);
 	pos += conn->session_id_len;
 	/* CipherSuite cipher_suite */
 	WPA_PUT_BE16(pos, conn->cipher_suite);
@@ -203,7 +203,7 @@ static int tls_write_server_certificate(struct tlsv1_server *conn,
 		}
 		WPA_PUT_BE24(pos, cert->cert_len);
 		pos += 3;
-		os_memcpy(pos, cert->cert_start, cert->cert_len);
+		memcpy(pos, cert->cert_start, cert->cert_len);
 		pos += cert->cert_len;
 
 		if (x509_certificate_self_signed(cert))
@@ -382,7 +382,7 @@ static int tls_write_server_key_exchange(struct tlsv1_server *conn,
 	}
 	WPA_PUT_BE16(pos, conn->cred->dh_p_len);
 	pos += 2;
-	os_memcpy(pos, conn->cred->dh_p, conn->cred->dh_p_len);
+	memcpy(pos, conn->cred->dh_p, conn->cred->dh_p_len);
 	pos += conn->cred->dh_p_len;
 
 	/* dh_g */
@@ -396,7 +396,7 @@ static int tls_write_server_key_exchange(struct tlsv1_server *conn,
 	}
 	WPA_PUT_BE16(pos, conn->cred->dh_g_len);
 	pos += 2;
-	os_memcpy(pos, conn->cred->dh_g, conn->cred->dh_g_len);
+	memcpy(pos, conn->cred->dh_g, conn->cred->dh_g_len);
 	pos += conn->cred->dh_g_len;
 
 	/* dh_Ys */
@@ -410,7 +410,7 @@ static int tls_write_server_key_exchange(struct tlsv1_server *conn,
 	}
 	WPA_PUT_BE16(pos, dh_ys_len);
 	pos += 2;
-	os_memcpy(pos, dh_ys, dh_ys_len);
+	memcpy(pos, dh_ys, dh_ys_len);
 	pos += dh_ys_len;
 	os_free(dh_ys);
 
@@ -630,7 +630,7 @@ static int tls_write_server_finished(struct tlsv1_server *conn,
 	/* uint24 length (to be filled) */
 	hs_length = pos;
 	pos += 3;
-	os_memcpy(pos, verify_data, TLS_VERIFY_DATA_LEN);
+	memcpy(pos, verify_data, TLS_VERIFY_DATA_LEN);
 	pos += TLS_VERIFY_DATA_LEN;
 	WPA_PUT_BE24(hs_length, pos - hs_length - 3);
 	tls_verify_hash_add(&conn->verify, hs_start, pos - hs_start);

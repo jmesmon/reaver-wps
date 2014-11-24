@@ -91,7 +91,7 @@ static PRInt32 nss_io_recv(PRFileDesc *fd, void *buf, PRInt32 amount,
 	end = conn->pull_buf + conn->pull_buf_len;
 	if (end - conn->pull_buf_offset < amount)
 		amount = end - conn->pull_buf_offset;
-	os_memcpy(buf, conn->pull_buf_offset, amount);
+	memcpy(buf, conn->pull_buf_offset, amount);
 	conn->pull_buf_offset += amount;
 	if (conn->pull_buf_offset == end) {
 		wpa_printf(MSG_DEBUG, "%s - pull_buf consumed", __func__);
@@ -122,7 +122,7 @@ static PRInt32 nss_io_send(PRFileDesc *fd, const void *buf, PRInt32 amount,
 			   "data to be sent");
 		return PR_FAILURE;
 	}
-	os_memcpy(nbuf + conn->push_buf_len, buf, amount);
+	memcpy(nbuf + conn->push_buf_len, buf, amount);
 	conn->push_buf = nbuf;
 	conn->push_buf_len += amount;
 
@@ -479,7 +479,7 @@ struct wpabuf * tls_connection_handshake(void *tls_ctx,
 		conn->pull_buf = os_malloc(wpabuf_len(in_data));
 		if (conn->pull_buf == NULL)
 			return NULL;
-		os_memcpy(conn->pull_buf, wpabuf_head(in_data),
+		memcpy(conn->pull_buf, wpabuf_head(in_data),
 			  wpabuf_len(in_data));
 		conn->pull_buf_offset = conn->pull_buf;
 		conn->pull_buf_len = wpabuf_len(in_data);
@@ -556,7 +556,7 @@ struct wpabuf * tls_connection_decrypt(void *tls_ctx,
 	conn->pull_buf = os_malloc(wpabuf_len(in_data));
 	if (conn->pull_buf == NULL)
 		return NULL;
-	os_memcpy(conn->pull_buf, wpabuf_head(in_data), wpabuf_len(in_data));
+	memcpy(conn->pull_buf, wpabuf_head(in_data), wpabuf_len(in_data));
 	conn->pull_buf_offset = conn->pull_buf;
 	conn->pull_buf_len = wpabuf_len(in_data);
 

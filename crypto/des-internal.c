@@ -272,7 +272,7 @@ static void cookey(const u32 *raw1, u32 *keyout)
 		*cook++ |= (*raw1 & 0x0000003fL);
 	}
 
-	os_memcpy(keyout, dough, sizeof(dough));
+	memcpy(keyout, dough, sizeof(dough));
 }
 
 

@@ -54,7 +54,7 @@ int wpa_eapol_key_mic(const u8 *key, int ver, const u8 *buf, size_t len,
 	case WPA_KEY_INFO_TYPE_HMAC_SHA1_AES:
 		if (hmac_sha1(key, 16, buf, len, hash))
 			return -1;
-		os_memcpy(mic, hash, MD5_MAC_LEN);
+		memcpy(mic, hash, MD5_MAC_LEN);
 		break;
 #if defined(CONFIG_IEEE80211R) || defined(CONFIG_IEEE80211W)
 	case WPA_KEY_INFO_TYPE_AES_128_CMAC:
@@ -98,20 +98,20 @@ void wpa_pmk_to_ptk(const u8 *pmk, size_t pmk_len, const char *label,
 	u8 data[2 * ETH_ALEN + 2 * WPA_NONCE_LEN];
 
 	if (os_memcmp(addr1, addr2, ETH_ALEN) < 0) {
-		os_memcpy(data, addr1, ETH_ALEN);
-		os_memcpy(data + ETH_ALEN, addr2, ETH_ALEN);
+		memcpy(data, addr1, ETH_ALEN);
+		memcpy(data + ETH_ALEN, addr2, ETH_ALEN);
 	} else {
-		os_memcpy(data, addr2, ETH_ALEN);
-		os_memcpy(data + ETH_ALEN, addr1, ETH_ALEN);
+		memcpy(data, addr2, ETH_ALEN);
+		memcpy(data + ETH_ALEN, addr1, ETH_ALEN);
 	}
 
 	if (os_memcmp(nonce1, nonce2, WPA_NONCE_LEN) < 0) {
-		os_memcpy(data + 2 * ETH_ALEN, nonce1, WPA_NONCE_LEN);
-		os_memcpy(data + 2 * ETH_ALEN + WPA_NONCE_LEN, nonce2,
+		memcpy(data + 2 * ETH_ALEN, nonce1, WPA_NONCE_LEN);
+		memcpy(data + 2 * ETH_ALEN + WPA_NONCE_LEN, nonce2,
 			  WPA_NONCE_LEN);
 	} else {
-		os_memcpy(data + 2 * ETH_ALEN, nonce2, WPA_NONCE_LEN);
-		os_memcpy(data + 2 * ETH_ALEN + WPA_NONCE_LEN, nonce1,
+		memcpy(data + 2 * ETH_ALEN, nonce2, WPA_NONCE_LEN);
+		memcpy(data + 2 * ETH_ALEN + WPA_NONCE_LEN, nonce1,
 			  WPA_NONCE_LEN);
 	}
 
@@ -147,22 +147,22 @@ int wpa_ft_mic(const u8 *kck, const u8 *sta_addr, const u8 *ap_addr,
 		return -1;
 
 	pos = buf;
-	os_memcpy(pos, sta_addr, ETH_ALEN);
+	memcpy(pos, sta_addr, ETH_ALEN);
 	pos += ETH_ALEN;
-	os_memcpy(pos, ap_addr, ETH_ALEN);
+	memcpy(pos, ap_addr, ETH_ALEN);
 	pos += ETH_ALEN;
 	*pos++ = transaction_seqnum;
 	if (rsnie) {
-		os_memcpy(pos, rsnie, rsnie_len);
+		memcpy(pos, rsnie, rsnie_len);
 		pos += rsnie_len;
 	}
 	if (mdie) {
-		os_memcpy(pos, mdie, mdie_len);
+		memcpy(pos, mdie, mdie_len);
 		pos += mdie_len;
 	}
 	if (ftie) {
 		struct rsn_ftie *_ftie;
-		os_memcpy(pos, ftie, ftie_len);
+		memcpy(pos, ftie, ftie_len);
 		if (ftie_len < 2 + sizeof(*_ftie)) {
 			os_free(buf);
 			return -1;
@@ -172,7 +172,7 @@ int wpa_ft_mic(const u8 *kck, const u8 *sta_addr, const u8 *ap_addr,
 		pos += ftie_len;
 	}
 	if (ric) {
-		os_memcpy(pos, ric, ric_len);
+		memcpy(pos, ric, ric_len);
 		pos += ric_len;
 	}
 
@@ -433,19 +433,19 @@ void wpa_derive_pmk_r0(const u8 *xxkey, size_t xxkey_len,
 		return;
 	pos = buf;
 	*pos++ = ssid_len;
-	os_memcpy(pos, ssid, ssid_len);
+	memcpy(pos, ssid, ssid_len);
 	pos += ssid_len;
-	os_memcpy(pos, mdid, MOBILITY_DOMAIN_ID_LEN);
+	memcpy(pos, mdid, MOBILITY_DOMAIN_ID_LEN);
 	pos += MOBILITY_DOMAIN_ID_LEN;
 	*pos++ = r0kh_id_len;
-	os_memcpy(pos, r0kh_id, r0kh_id_len);
+	memcpy(pos, r0kh_id, r0kh_id_len);
 	pos += r0kh_id_len;
-	os_memcpy(pos, s0kh_id, ETH_ALEN);
+	memcpy(pos, s0kh_id, ETH_ALEN);
 	pos += ETH_ALEN;
 
 	sha256_prf(xxkey, xxkey_len, "FT-R0", buf, pos - buf,
 		   r0_key_data, sizeof(r0_key_data));
-	os_memcpy(pmk_r0, r0_key_data, PMK_LEN);
+	memcpy(pmk_r0, r0_key_data, PMK_LEN);
 
 	/*
 	 * PMKR0Name = Truncate-128(SHA-256("FT-R0N" || PMK-R0Name-Salt)
@@ -456,7 +456,7 @@ void wpa_derive_pmk_r0(const u8 *xxkey, size_t xxkey_len,
 	len[1] = 16;
 
 	sha256_vector(2, addr, len, hash);
-	os_memcpy(pmk_r0_name, hash, WPA_PMK_NAME_LEN);
+	memcpy(pmk_r0_name, hash, WPA_PMK_NAME_LEN);
 }
 
 
@@ -486,7 +486,7 @@ void wpa_derive_pmk_r1_name(const u8 *pmk_r0_name, const u8 *r1kh_id,
 	len[3] = ETH_ALEN;
 
 	sha256_vector(4, addr, len, hash);
-	os_memcpy(pmk_r1_name, hash, WPA_PMK_NAME_LEN);
+	memcpy(pmk_r1_name, hash, WPA_PMK_NAME_LEN);
 }
 
 
@@ -504,9 +504,9 @@ void wpa_derive_pmk_r1(const u8 *pmk_r0, const u8 *pmk_r0_name,
 
 	/* PMK-R1 = KDF-256(PMK-R0, "FT-R1", R1KH-ID || S1KH-ID) */
 	pos = buf;
-	os_memcpy(pos, r1kh_id, FT_R1KH_ID_LEN);
+	memcpy(pos, r1kh_id, FT_R1KH_ID_LEN);
 	pos += FT_R1KH_ID_LEN;
-	os_memcpy(pos, s1kh_id, ETH_ALEN);
+	memcpy(pos, s1kh_id, ETH_ALEN);
 	pos += ETH_ALEN;
 
 	sha256_prf(pmk_r0, PMK_LEN, "FT-R1", buf, pos - buf, pmk_r1, PMK_LEN);
@@ -535,13 +535,13 @@ void wpa_pmk_r1_to_ptk(const u8 *pmk_r1, const u8 *snonce, const u8 *anonce,
 	 *                  BSSID || STA-ADDR)
 	 */
 	pos = buf;
-	os_memcpy(pos, snonce, WPA_NONCE_LEN);
+	memcpy(pos, snonce, WPA_NONCE_LEN);
 	pos += WPA_NONCE_LEN;
-	os_memcpy(pos, anonce, WPA_NONCE_LEN);
+	memcpy(pos, anonce, WPA_NONCE_LEN);
 	pos += WPA_NONCE_LEN;
-	os_memcpy(pos, bssid, ETH_ALEN);
+	memcpy(pos, bssid, ETH_ALEN);
 	pos += ETH_ALEN;
-	os_memcpy(pos, sta_addr, ETH_ALEN);
+	memcpy(pos, sta_addr, ETH_ALEN);
 	pos += ETH_ALEN;
 
 	sha256_prf(pmk_r1, PMK_LEN, "FT-PTK", buf, pos - buf, ptk, ptk_len);
@@ -564,7 +564,7 @@ void wpa_pmk_r1_to_ptk(const u8 *pmk_r1, const u8 *snonce, const u8 *anonce,
 	len[5] = ETH_ALEN;
 
 	sha256_vector(6, addr, len, hash);
-	os_memcpy(ptk_name, hash, WPA_PMK_NAME_LEN);
+	memcpy(ptk_name, hash, WPA_PMK_NAME_LEN);
 }
 
 #endif /* CONFIG_IEEE80211R */
@@ -600,7 +600,7 @@ void rsn_pmkid(const u8 *pmk, size_t pmk_len, const u8 *aa, const u8 *spa,
 	else
 #endif /* CONFIG_IEEE80211W */
 		hmac_sha1_vector(pmk, pmk_len, 3, addr, len, hash);
-	os_memcpy(pmkid, hash, PMKID_LEN);
+	memcpy(pmkid, hash, PMKID_LEN);
 }
 
 
@@ -761,7 +761,7 @@ int wpa_insert_pmkid(u8 *ies, size_t ies_len, const u8 *pmkid)
 		os_memmove(rpos + 2 + PMKID_LEN, rpos, end - rpos);
 		WPA_PUT_LE16(rpos, 1);
 		rpos += 2;
-		os_memcpy(rpos, pmkid, PMKID_LEN);
+		memcpy(rpos, pmkid, PMKID_LEN);
 		added += 2 + PMKID_LEN;
 		start[1] += 2 + PMKID_LEN;
 	} else {
@@ -774,7 +774,7 @@ int wpa_insert_pmkid(u8 *ies, size_t ies_len, const u8 *pmkid)
 		WPA_PUT_LE16(rpos, 1);
 		rpos += 2;
 		os_memmove(rpos + PMKID_LEN, rpos, end - rpos);
-		os_memcpy(rpos, pmkid, PMKID_LEN);
+		memcpy(rpos, pmkid, PMKID_LEN);
 		added += PMKID_LEN;
 		start[1] += PMKID_LEN;
 	}

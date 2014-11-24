@@ -98,7 +98,7 @@ static int tls_process_client_hello(struct tlsv1_server *conn, u8 ct,
 	if (end - pos < TLS_RANDOM_LEN)
 		goto decode_error;
 
-	os_memcpy(conn->client_random, pos, TLS_RANDOM_LEN);
+	memcpy(conn->client_random, pos, TLS_RANDOM_LEN);
 	pos += TLS_RANDOM_LEN;
 	wpa_hexdump(MSG_MSGDUMP, "TLSv1: client_random",
 		    conn->client_random, TLS_RANDOM_LEN);
@@ -238,7 +238,7 @@ static int tls_process_client_hello(struct tlsv1_server *conn, u8 ct,
 				os_free(conn->session_ticket);
 				conn->session_ticket = os_malloc(ext_len);
 				if (conn->session_ticket) {
-					os_memcpy(conn->session_ticket, pos,
+					memcpy(conn->session_ticket, pos,
 						  ext_len);
 					conn->session_ticket_len = ext_len;
 				}

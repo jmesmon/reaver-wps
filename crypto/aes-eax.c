@@ -56,19 +56,19 @@ int aes_128_eax_encrypt(const u8 *key, const u8 *nonce, size_t nonce_len,
 	memset(buf, 0, 15);
 
 	buf[15] = 0;
-	os_memcpy(buf + 16, nonce, nonce_len);
+	memcpy(buf + 16, nonce, nonce_len);
 	if (omac1_aes_128(key, buf, 16 + nonce_len, nonce_mac))
 		goto fail;
 
 	buf[15] = 1;
-	os_memcpy(buf + 16, hdr, hdr_len);
+	memcpy(buf + 16, hdr, hdr_len);
 	if (omac1_aes_128(key, buf, 16 + hdr_len, hdr_mac))
 		goto fail;
 
 	if (aes_128_ctr_encrypt(key, nonce_mac, data, data_len))
 		goto fail;
 	buf[15] = 2;
-	os_memcpy(buf + 16, data, data_len);
+	memcpy(buf + 16, data, data_len);
 	if (omac1_aes_128(key, buf, 16 + data_len, data_mac))
 		goto fail;
 
@@ -120,21 +120,21 @@ int aes_128_eax_decrypt(const u8 *key, const u8 *nonce, size_t nonce_len,
 	memset(buf, 0, 15);
 
 	buf[15] = 0;
-	os_memcpy(buf + 16, nonce, nonce_len);
+	memcpy(buf + 16, nonce, nonce_len);
 	if (omac1_aes_128(key, buf, 16 + nonce_len, nonce_mac)) {
 		os_free(buf);
 		return -1;
 	}
 
 	buf[15] = 1;
-	os_memcpy(buf + 16, hdr, hdr_len);
+	memcpy(buf + 16, hdr, hdr_len);
 	if (omac1_aes_128(key, buf, 16 + hdr_len, hdr_mac)) {
 		os_free(buf);
 		return -1;
 	}
 
 	buf[15] = 2;
-	os_memcpy(buf + 16, data, data_len);
+	memcpy(buf + 16, data, data_len);
 	if (omac1_aes_128(key, buf, 16 + data_len, data_mac)) {
 		os_free(buf);
 		return -1;

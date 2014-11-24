@@ -473,7 +473,7 @@ static int wps_process_registrar_nonce(struct wps_data *wps, const u8 *r_nonce)
 		return -1;
 	}
 
-	os_memcpy(wps->nonce_r, r_nonce, WPS_NONCE_LEN);
+	memcpy(wps->nonce_r, r_nonce, WPS_NONCE_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: Registrar Nonce",
 		    wps->nonce_r, WPS_NONCE_LEN);
 
@@ -504,7 +504,7 @@ static int wps_process_uuid_r(struct wps_data *wps, const u8 *uuid_r)
 		return -1;
 	}
 
-	os_memcpy(wps->uuid_r, uuid_r, WPS_UUID_LEN);
+	memcpy(wps->uuid_r, uuid_r, WPS_UUID_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: UUID-R", wps->uuid_r, WPS_UUID_LEN);
 
 	return 0;
@@ -555,7 +555,7 @@ static int wps_process_r_hash1(struct wps_data *wps, const u8 *r_hash1)
 		return -1;
 	}
 
-	os_memcpy(wps->peer_hash1, r_hash1, WPS_HASH_LEN);
+	memcpy(wps->peer_hash1, r_hash1, WPS_HASH_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: R-Hash1", wps->peer_hash1, WPS_HASH_LEN);
 
 	return 0;
@@ -569,7 +569,7 @@ static int wps_process_r_hash2(struct wps_data *wps, const u8 *r_hash2)
 		return -1;
 	}
 
-	os_memcpy(wps->peer_hash2, r_hash2, WPS_HASH_LEN);
+	memcpy(wps->peer_hash2, r_hash2, WPS_HASH_LEN);
 	wpa_hexdump(MSG_DEBUG, "WPS: R-Hash2", wps->peer_hash2, WPS_HASH_LEN);
 
 	return 0;

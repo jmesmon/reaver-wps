@@ -76,7 +76,7 @@ static int pkcs1_generate_encryption_block(u8 block_type, size_t modlen,
 		return -1;
 	}
 	*pos++ = 0x00;
-	os_memcpy(pos, in, inlen); /* D */
+	memcpy(pos, in, inlen); /* D */
 
 	return 0;
 }

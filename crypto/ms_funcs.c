@@ -46,7 +46,7 @@ static int challenge_hash(const u8 *peer_challenge, const u8 *auth_challenge,
 
 	if (sha1_vector(3, addr, len, hash))
 		return -1;
-	os_memcpy(challenge, hash, 8);
+	memcpy(challenge, hash, 8);
 	return 0;
 }
 
@@ -295,7 +295,7 @@ int get_master_key(const u8 *password_hash_hash, const u8 *nt_response,
 
 	if (sha1_vector(3, addr, len, hash))
 		return -1;
-	os_memcpy(master_key, hash, 16);
+	memcpy(master_key, hash, 16);
 	return 0;
 }
 
@@ -366,7 +366,7 @@ int get_asymetric_start_key(const u8 *master_key, u8 *session_key,
 
 	if (session_key_len > SHA1_MAC_LEN)
 		session_key_len = SHA1_MAC_LEN;
-	os_memcpy(session_key, digest, session_key_len);
+	memcpy(session_key, digest, session_key_len);
 	return 0;
 }
 

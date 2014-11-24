@@ -88,11 +88,11 @@ u8 * tls_send_client_hello(struct tlsv1_client *conn, size_t *out_len)
 	WPA_PUT_BE16(pos, TLS_VERSION);
 	pos += 2;
 	/* Random random: uint32 gmt_unix_time, opaque random_bytes */
-	os_memcpy(pos, conn->client_random, TLS_RANDOM_LEN);
+	memcpy(pos, conn->client_random, TLS_RANDOM_LEN);
 	pos += TLS_RANDOM_LEN;
 	/* SessionID session_id */
 	*pos++ = conn->session_id_len;
-	os_memcpy(pos, conn->session_id, conn->session_id_len);
+	memcpy(pos, conn->session_id, conn->session_id_len);
 	pos += conn->session_id_len;
 	/* CipherSuite cipher_suites<2..2^16-1> */
 	WPA_PUT_BE16(pos, 2 * conn->num_cipher_suites);
@@ -106,7 +106,7 @@ u8 * tls_send_client_hello(struct tlsv1_client *conn, size_t *out_len)
 	*pos++ = TLS_COMPRESSION_NULL;
 
 	if (conn->client_hello_ext) {
-		os_memcpy(pos, conn->client_hello_ext,
+		memcpy(pos, conn->client_hello_ext,
 			  conn->client_hello_ext_len);
 		pos += conn->client_hello_ext_len;
 	}
@@ -168,7 +168,7 @@ static int tls_write_client_certificate(struct tlsv1_client *conn,
 		}
 		WPA_PUT_BE24(pos, cert->cert_len);
 		pos += 3;
-		os_memcpy(pos, cert->cert_start, cert->cert_len);
+		memcpy(pos, cert->cert_start, cert->cert_len);
 		pos += cert->cert_len;
 
 		if (x509_certificate_self_signed(cert))
@@ -278,7 +278,7 @@ static int tlsv1_key_x_anon_dh(struct tlsv1_client *conn, u8 **pos, u8 *end)
 		os_free(dh_yc);
 		return -1;
 	}
-	os_memcpy(*pos, dh_yc, dh_yc_len);
+	memcpy(*pos, dh_yc, dh_yc_len);
 	*pos += dh_yc_len;
 	os_free(dh_yc);
 
@@ -639,7 +639,7 @@ static int tls_write_client_finished(struct tlsv1_client *conn,
 	/* uint24 length (to be filled) */
 	hs_length = pos;
 	pos += 3;
-	os_memcpy(pos, verify_data, TLS_VERIFY_DATA_LEN);
+	memcpy(pos, verify_data, TLS_VERIFY_DATA_LEN);
 	pos += TLS_VERIFY_DATA_LEN;
 	WPA_PUT_BE24(hs_length, pos - hs_length - 3);
 	tls_verify_hash_add(&conn->verify, hs_start, pos - hs_start);

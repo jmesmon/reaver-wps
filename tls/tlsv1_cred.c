@@ -381,7 +381,7 @@ static int tlsv1_set_dhparams_der(struct tlsv1_credentials *cred,
 	cred->dh_p = os_malloc(hdr.length);
 	if (cred->dh_p == NULL)
 		return -1;
-	os_memcpy(cred->dh_p, hdr.payload, hdr.length);
+	memcpy(cred->dh_p, hdr.payload, hdr.length);
 	cred->dh_p_len = hdr.length;
 	pos = hdr.payload + hdr.length;
 
@@ -403,7 +403,7 @@ static int tlsv1_set_dhparams_der(struct tlsv1_credentials *cred,
 	cred->dh_g = os_malloc(hdr.length);
 	if (cred->dh_g == NULL)
 		return -1;
-	os_memcpy(cred->dh_g, hdr.payload, hdr.length);
+	memcpy(cred->dh_g, hdr.payload, hdr.length);
 	cred->dh_g_len = hdr.length;
 
 	return 0;

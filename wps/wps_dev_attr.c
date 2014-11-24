@@ -190,7 +190,7 @@ static int wps_process_manufacturer(struct wps_device_data *dev, const u8 *str,
 	dev->manufacturer = os_malloc(str_len + 1);
 	if (dev->manufacturer == NULL)
 		return -1;
-	os_memcpy(dev->manufacturer, str, str_len);
+	memcpy(dev->manufacturer, str, str_len);
 	dev->manufacturer[str_len] = '\0';
 
 	return 0;
@@ -211,7 +211,7 @@ static int wps_process_model_name(struct wps_device_data *dev, const u8 *str,
 	dev->model_name = os_malloc(str_len + 1);
 	if (dev->model_name == NULL)
 		return -1;
-	os_memcpy(dev->model_name, str, str_len);
+	memcpy(dev->model_name, str, str_len);
 	dev->model_name[str_len] = '\0';
 
 	return 0;
@@ -232,7 +232,7 @@ static int wps_process_model_number(struct wps_device_data *dev, const u8 *str,
 	dev->model_number = os_malloc(str_len + 1);
 	if (dev->model_number == NULL)
 		return -1;
-	os_memcpy(dev->model_number, str, str_len);
+	memcpy(dev->model_number, str, str_len);
 	dev->model_number[str_len] = '\0';
 
 	return 0;
@@ -253,7 +253,7 @@ static int wps_process_serial_number(struct wps_device_data *dev,
 	dev->serial_number = os_malloc(str_len + 1);
 	if (dev->serial_number == NULL)
 		return -1;
-	os_memcpy(dev->serial_number, str, str_len);
+	memcpy(dev->serial_number, str, str_len);
 	dev->serial_number[str_len] = '\0';
 
 	return 0;
@@ -274,7 +274,7 @@ static int wps_process_dev_name(struct wps_device_data *dev, const u8 *str,
 	dev->device_name = os_malloc(str_len + 1);
 	if (dev->device_name == NULL)
 		return -1;
-	os_memcpy(dev->device_name, str, str_len);
+	memcpy(dev->device_name, str, str_len);
 	dev->device_name[str_len] = '\0';
 
 	return 0;
@@ -293,7 +293,7 @@ static int wps_process_primary_dev_type(struct wps_device_data *dev,
 		return -1;
 	}
 
-	os_memcpy(dev->pri_dev_type, dev_type, WPS_DEV_TYPE_LEN);
+	memcpy(dev->pri_dev_type, dev_type, WPS_DEV_TYPE_LEN);
 	wpa_printf(MSG_DEBUG, "WPS: Primary Device Type: %s",
 		   wps_dev_type_bin2str(dev->pri_dev_type, devtype,
 					sizeof(devtype)));
@@ -361,7 +361,7 @@ void wps_device_data_dup(struct wps_device_data *dst,
 		dst->model_number = os_strdup(src->model_number);
 	if (src->serial_number)
 		dst->serial_number = os_strdup(src->serial_number);
-	os_memcpy(dst->pri_dev_type, src->pri_dev_type, WPS_DEV_TYPE_LEN);
+	memcpy(dst->pri_dev_type, src->pri_dev_type, WPS_DEV_TYPE_LEN);
 	dst->os_version = src->os_version;
 	dst->rf_bands = src->rf_bands;
 }

@@ -219,7 +219,7 @@ int wpa_ctrl_request(struct wpa_ctrl *ctrl, const char *cmd, size_t cmd_len,
 		os_strlcpy(pos, ctrl->cookie, _cmd_len);
 		pos += os_strlen(ctrl->cookie);
 		*pos++ = ' ';
-		os_memcpy(pos, cmd, cmd_len);
+		memcpy(pos, cmd, cmd_len);
 	} else
 #endif /* CONFIG_CTRL_IFACE_UDP */
 	{

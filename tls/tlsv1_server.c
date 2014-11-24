@@ -46,8 +46,8 @@ int tlsv1_server_derive_keys(struct tlsv1_server *conn,
 	if (pre_master_secret) {
 		wpa_hexdump_key(MSG_MSGDUMP, "TLSv1: pre_master_secret",
 				pre_master_secret, pre_master_secret_len);
-		os_memcpy(seed, conn->client_random, TLS_RANDOM_LEN);
-		os_memcpy(seed + TLS_RANDOM_LEN, conn->server_random,
+		memcpy(seed, conn->client_random, TLS_RANDOM_LEN);
+		memcpy(seed + TLS_RANDOM_LEN, conn->server_random,
 			  TLS_RANDOM_LEN);
 		if (tls_prf(pre_master_secret, pre_master_secret_len,
 			    "master secret", seed, 2 * TLS_RANDOM_LEN,
@@ -60,8 +60,8 @@ int tlsv1_server_derive_keys(struct tlsv1_server *conn,
 				conn->master_secret, TLS_MASTER_SECRET_LEN);
 	}
 
-	os_memcpy(seed, conn->server_random, TLS_RANDOM_LEN);
-	os_memcpy(seed + TLS_RANDOM_LEN, conn->client_random, TLS_RANDOM_LEN);
+	memcpy(seed, conn->server_random, TLS_RANDOM_LEN);
+	memcpy(seed + TLS_RANDOM_LEN, conn->client_random, TLS_RANDOM_LEN);
 	key_block_len = 2 * (conn->rl.hash_size + conn->rl.key_material_len +
 			     conn->rl.iv_size);
 	if (tls_prf(conn->master_secret, TLS_MASTER_SECRET_LEN,
@@ -76,24 +76,24 @@ int tlsv1_server_derive_keys(struct tlsv1_server *conn,
 	pos = key_block;
 
 	/* client_write_MAC_secret */
-	os_memcpy(conn->rl.read_mac_secret, pos, conn->rl.hash_size);
+	memcpy(conn->rl.read_mac_secret, pos, conn->rl.hash_size);
 	pos += conn->rl.hash_size;
 	/* server_write_MAC_secret */
-	os_memcpy(conn->rl.write_mac_secret, pos, conn->rl.hash_size);
+	memcpy(conn->rl.write_mac_secret, pos, conn->rl.hash_size);
 	pos += conn->rl.hash_size;
 
 	/* client_write_key */
-	os_memcpy(conn->rl.read_key, pos, conn->rl.key_material_len);
+	memcpy(conn->rl.read_key, pos, conn->rl.key_material_len);
 	pos += conn->rl.key_material_len;
 	/* server_write_key */
-	os_memcpy(conn->rl.write_key, pos, conn->rl.key_material_len);
+	memcpy(conn->rl.write_key, pos, conn->rl.key_material_len);
 	pos += conn->rl.key_material_len;
 
 	/* client_write_IV */
-	os_memcpy(conn->rl.read_iv, pos, conn->rl.iv_size);
+	memcpy(conn->rl.read_iv, pos, conn->rl.iv_size);
 	pos += conn->rl.iv_size;
 	/* server_write_IV */
-	os_memcpy(conn->rl.write_iv, pos, conn->rl.iv_size);
+	memcpy(conn->rl.write_iv, pos, conn->rl.iv_size);
 	pos += conn->rl.iv_size;
 
 	return 0;
@@ -201,7 +201,7 @@ int tlsv1_server_encrypt(struct tlsv1_server *conn,
 	wpa_hexdump_key(MSG_MSGDUMP, "TLSv1: Plaintext AppData",
 			in_data, in_len);
 
-	os_memcpy(out_data + TLS_RECORD_HEADER_LEN, in_data, in_len);
+	memcpy(out_data + TLS_RECORD_HEADER_LEN, in_data, in_len);
 
 	if (tlsv1_record_send(&conn->rl, TLS_CONTENT_TYPE_APPLICATION_DATA,
 			      out_data, out_len, in_len, &rlen) < 0) {
@@ -403,12 +403,12 @@ int tlsv1_server_prf(struct tlsv1_server *conn, const char *label,
 		return -1;
 
 	if (server_random_first) {
-		os_memcpy(seed, conn->server_random, TLS_RANDOM_LEN);
-		os_memcpy(seed + TLS_RANDOM_LEN, conn->client_random,
+		memcpy(seed, conn->server_random, TLS_RANDOM_LEN);
+		memcpy(seed + TLS_RANDOM_LEN, conn->client_random,
 			  TLS_RANDOM_LEN);
 	} else {
-		os_memcpy(seed, conn->client_random, TLS_RANDOM_LEN);
-		os_memcpy(seed + TLS_RANDOM_LEN, conn->server_random,
+		memcpy(seed, conn->client_random, TLS_RANDOM_LEN);
+		memcpy(seed + TLS_RANDOM_LEN, conn->server_random,
 			  TLS_RANDOM_LEN);
 	}
 

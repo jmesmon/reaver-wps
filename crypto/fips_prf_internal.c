@@ -33,7 +33,7 @@ int fips186_2_prf(const u8 *seed, size_t seed_len, u8 *x, size_t xlen)
 
 	/* FIPS 186-2 + change notice 1 */
 
-	os_memcpy(xkey, seed, seed_len);
+	memcpy(xkey, seed, seed_len);
 	memset(xkey + seed_len, 0, 64 - seed_len);
 	t[0] = 0x67452301;
 	t[1] = 0xEFCDAB89;
@@ -48,14 +48,14 @@ int fips186_2_prf(const u8 *seed, size_t seed_len, u8 *x, size_t xlen)
 			/* XVAL = (XKEY + XSEED_j) mod 2^b */
 
 			/* w_i = G(t, XVAL) */
-			os_memcpy(_t, t, 20);
+			memcpy(_t, t, 20);
 			SHA1Transform(_t, xkey);
 			_t[0] = host_to_be32(_t[0]);
 			_t[1] = host_to_be32(_t[1]);
 			_t[2] = host_to_be32(_t[2]);
 			_t[3] = host_to_be32(_t[3]);
 			_t[4] = host_to_be32(_t[4]);
-			os_memcpy(xpos, _t, 20);
+			memcpy(xpos, _t, 20);
 
 			/* XKEY = (1 + XKEY + w_i) mod 2^b */
 			carry = 1;

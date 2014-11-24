@@ -312,7 +312,7 @@ int tlsv1_record_receive(struct tlsv1_record_layer *rl,
 		return -1;
 	}
 
-	os_memcpy(out_data, in_data, in_len);
+	memcpy(out_data, in_data, in_len);
 	*out_len = in_len;
 
 	if (rl->read_cipher_suite != TLS_NULL_WITH_NULL_NULL) {

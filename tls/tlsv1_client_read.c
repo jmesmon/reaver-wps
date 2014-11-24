@@ -92,7 +92,7 @@ static int tls_process_server_hello(struct tlsv1_client *conn, u8 ct,
 	if (end - pos < TLS_RANDOM_LEN)
 		goto decode_error;
 
-	os_memcpy(conn->server_random, pos, TLS_RANDOM_LEN);
+	memcpy(conn->server_random, pos, TLS_RANDOM_LEN);
 	pos += TLS_RANDOM_LEN;
 	wpa_hexdump(MSG_MSGDUMP, "TLSv1: server_random",
 		    conn->server_random, TLS_RANDOM_LEN);
@@ -110,7 +110,7 @@ static int tls_process_server_hello(struct tlsv1_client *conn, u8 ct,
 	} else {
 		conn->session_id_len = *pos;
 		pos++;
-		os_memcpy(conn->session_id, pos, conn->session_id_len);
+		memcpy(conn->session_id, pos, conn->session_id_len);
 		pos += conn->session_id_len;
 	}
 	wpa_hexdump(MSG_MSGDUMP, "TLSv1: session_id",
@@ -429,7 +429,7 @@ static int tlsv1_process_diffie_hellman(struct tlsv1_client *conn,
 	conn->dh_p = os_malloc(conn->dh_p_len);
 	if (conn->dh_p == NULL)
 		goto fail;
-	os_memcpy(conn->dh_p, pos, conn->dh_p_len);
+	memcpy(conn->dh_p, pos, conn->dh_p_len);
 	pos += conn->dh_p_len;
 	wpa_hexdump(MSG_DEBUG, "TLSv1: DH p (prime)",
 		    conn->dh_p, conn->dh_p_len);
@@ -443,7 +443,7 @@ static int tlsv1_process_diffie_hellman(struct tlsv1_client *conn,
 	conn->dh_g = os_malloc(conn->dh_g_len);
 	if (conn->dh_g == NULL)
 		goto fail;
-	os_memcpy(conn->dh_g, pos, conn->dh_g_len);
+	memcpy(conn->dh_g, pos, conn->dh_g_len);
 	pos += conn->dh_g_len;
 	wpa_hexdump(MSG_DEBUG, "TLSv1: DH g (generator)",
 		    conn->dh_g, conn->dh_g_len);
@@ -459,7 +459,7 @@ static int tlsv1_process_diffie_hellman(struct tlsv1_client *conn,
 	conn->dh_ys = os_malloc(conn->dh_ys_len);
 	if (conn->dh_ys == NULL)
 		goto fail;
-	os_memcpy(conn->dh_ys, pos, conn->dh_ys_len);
+	memcpy(conn->dh_ys, pos, conn->dh_ys_len);
 	pos += conn->dh_ys_len;
 	wpa_hexdump(MSG_DEBUG, "TLSv1: DH Ys (server's public value)",
 		    conn->dh_ys, conn->dh_ys_len);
@@ -887,7 +887,7 @@ static int tls_process_application_data(struct tlsv1_client *conn, u8 ct,
 
 	*out_data = os_malloc(left);
 	if (*out_data) {
-		os_memcpy(*out_data, pos, left);
+		memcpy(*out_data, pos, left);
 		*out_len = left;
 	}
 

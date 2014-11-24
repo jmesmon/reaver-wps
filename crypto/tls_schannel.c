@@ -209,7 +209,7 @@ int tls_connection_prf(void *tls_ctx, struct tls_connection *conn,
 	    out_len > sizeof(conn->eap_tls_prf))
 		return -1;
 
-	os_memcpy(out, conn->eap_tls_prf, out_len);
+	memcpy(out, conn->eap_tls_prf, out_len);
 
 	return 0;
 }
@@ -308,7 +308,7 @@ static int tls_get_eap(struct tls_global *global, struct tls_connection *conn)
 	wpa_hexdump_key(MSG_MSGDUMP, "Schannel - EapKeyBlock - rgbIVs",
 			kb.rgbIVs, sizeof(kb.rgbIVs));
 
-	os_memcpy(conn->eap_tls_prf, kb.rgbKeys, sizeof(kb.rgbKeys));
+	memcpy(conn->eap_tls_prf, kb.rgbKeys, sizeof(kb.rgbKeys));
 	conn->eap_tls_prf_set = 1;
 	return 0;
 }

@@ -64,7 +64,7 @@ int hmac_md5_vector(const u8 *key, size_t key_len, size_t num_elem,
 
 	/* start out by storing key in ipad */
 	memset(k_pad, 0, sizeof(k_pad));
-	os_memcpy(k_pad, key, key_len);
+	memcpy(k_pad, key, key_len);
 
 	/* XOR key with ipad values */
 	for (i = 0; i < 64; i++)
@@ -81,7 +81,7 @@ int hmac_md5_vector(const u8 *key, size_t key_len, size_t num_elem,
 		return -1;
 
 	memset(k_pad, 0, sizeof(k_pad));
-	os_memcpy(k_pad, key, key_len);
+	memcpy(k_pad, key, key_len);
 	/* XOR key with opad values */
 	for (i = 0; i < 64; i++)
 		k_pad[i] ^= 0x5c;

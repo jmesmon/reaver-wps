@@ -185,7 +185,7 @@ void SHA1Transform(u32 state[5], const unsigned char buffer[64])
 #ifdef SHA1HANDSOFF
 	CHAR64LONG16 workspace;
 	block = &workspace;
-	os_memcpy(block, buffer, 64);
+	memcpy(block, buffer, 64);
 #else
 	block = (CHAR64LONG16 *) buffer;
 #endif
@@ -259,7 +259,7 @@ void SHA1Update(SHA1_CTX* context, const void *_data, u32 len)
 		context->count[1]++;
 	context->count[1] += (len >> 29);
 	if ((j + len) > 63) {
-		os_memcpy(&context->buffer[j], data, (i = 64-j));
+		memcpy(&context->buffer[j], data, (i = 64-j));
 		SHA1Transform(context->state, context->buffer);
 		for ( ; i + 63 < len; i += 64) {
 			SHA1Transform(context->state, &data[i]);
@@ -267,7 +267,7 @@ void SHA1Update(SHA1_CTX* context, const void *_data, u32 len)
 		j = 0;
 	}
 	else i = 0;
-	os_memcpy(&context->buffer[j], &data[i], len - i);
+	memcpy(&context->buffer[j], &data[i], len - i);
 #ifdef VERBOSE
 	SHAPrintContext(context, "after ");
 #endif

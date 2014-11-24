@@ -48,13 +48,13 @@ static int pbkdf2_sha1_f(const char *passphrase, const char *ssid,
 	if (hmac_sha1_vector((u8 *) passphrase, passphrase_len, 2, addr, len,
 			     tmp))
 		return -1;
-	os_memcpy(digest, tmp, SHA1_MAC_LEN);
+	memcpy(digest, tmp, SHA1_MAC_LEN);
 
 	for (i = 1; i < iterations; i++) {
 		if (hmac_sha1((u8 *) passphrase, passphrase_len, tmp,
 			      SHA1_MAC_LEN, tmp2))
 			return -1;
-		os_memcpy(tmp, tmp2, SHA1_MAC_LEN);
+		memcpy(tmp, tmp2, SHA1_MAC_LEN);
 		for (j = 0; j < SHA1_MAC_LEN; j++)
 			digest[j] ^= tmp2[j];
 	}
@@ -91,7 +91,7 @@ int pbkdf2_sha1(const char *passphrase, const char *ssid, size_t ssid_len,
 				  count, digest))
 			return -1;
 		plen = left > SHA1_MAC_LEN ? SHA1_MAC_LEN : left;
-		os_memcpy(pos, digest, plen);
+		memcpy(pos, digest, plen);
 		pos += plen;
 		left -= plen;
 	}

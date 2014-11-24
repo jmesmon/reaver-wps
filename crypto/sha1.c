@@ -64,7 +64,7 @@ int hmac_sha1_vector(const u8 *key, size_t key_len, size_t num_elem,
 
 	/* start out by storing key in ipad */
 	memset(k_pad, 0, sizeof(k_pad));
-	os_memcpy(k_pad, key, key_len);
+	memcpy(k_pad, key, key_len);
 	/* XOR key with ipad values */
 	for (i = 0; i < 64; i++)
 		k_pad[i] ^= 0x36;
@@ -80,7 +80,7 @@ int hmac_sha1_vector(const u8 *key, size_t key_len, size_t num_elem,
 		return -1;
 
 	memset(k_pad, 0, sizeof(k_pad));
-	os_memcpy(k_pad, key, key_len);
+	memcpy(k_pad, key, key_len);
 	/* XOR key with opad values */
 	for (i = 0; i < 64; i++)
 		k_pad[i] ^= 0x5c;
@@ -153,7 +153,7 @@ int sha1_prf(const u8 *key, size_t key_len, const char *label,
 			if (hmac_sha1_vector(key, key_len, 3, addr, len,
 					     hash))
 				return -1;
-			os_memcpy(&buf[pos], hash, plen);
+			memcpy(&buf[pos], hash, plen);
 			break;
 		}
 		counter++;

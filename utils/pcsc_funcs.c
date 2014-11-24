@@ -414,7 +414,7 @@ static int scard_get_aid(struct scard_data *scard, unsigned char *aid,
 		return -1;
 	}
 
-	os_memcpy(aid, efdir->rid, efdir->aid_len);
+	memcpy(aid, efdir->rid, efdir->aid_len);
 
 	return efdir->aid_len;
 }
@@ -561,7 +561,7 @@ struct scard_data * scard_init(scard_sim_type sim_type)
 		if (aid_len < 0) {
 			wpa_printf(MSG_DEBUG, "SCARD: Failed to find AID for "
 				   "3G USIM app - try to use standard 3G RID");
-			os_memcpy(aid, "\xa0\x00\x00\x00\x87", 5);
+			memcpy(aid, "\xa0\x00\x00\x00\x87", 5);
 			aid_len = 5;
 		}
 		wpa_hexdump(MSG_DEBUG, "SCARD: 3G USIM AID", aid, aid_len);
@@ -724,7 +724,7 @@ static int _scard_select_file(struct scard_data *scard, unsigned short file_id,
 			return -1;
 		cmd[2] = 0x04; /* Select by AID */
 		cmd[4] = aidlen; /* len */
-		os_memcpy(cmd + 5, aid, aidlen);
+		memcpy(cmd + 5, aid, aidlen);
 		cmdlen = 5 + aidlen;
 	} else {
 		cmd[5] = file_id >> 8;
@@ -862,7 +862,7 @@ static int scard_read_record(struct scard_data *scard,
 		return -4;
 	}
 
-	os_memcpy(data, buf, len);
+	memcpy(data, buf, len);
 	os_free(buf);
 
 	return 0;
@@ -906,7 +906,7 @@ static int scard_read_file(struct scard_data *scard,
 		return -4;
 	}
 
-	os_memcpy(data, buf, len);
+	memcpy(data, buf, len);
 	os_free(buf);
 
 	return 0;
@@ -927,7 +927,7 @@ static int scard_verify_pin(struct scard_data *scard, const char *pin)
 
 	if (scard->sim_type == SCARD_USIM)
 		cmd[0] = USIM_CLA;
-	os_memcpy(cmd + 5, pin, os_strlen(pin));
+	memcpy(cmd + 5, pin, os_strlen(pin));
 	memset(cmd + 5 + os_strlen(pin), 0xff, 8 - os_strlen(pin));
 
 	len = sizeof(resp);
@@ -1054,14 +1054,14 @@ int scard_gsm_auth(struct scard_data *scard, const unsigned char *_rand,
 	wpa_hexdump(MSG_DEBUG, "SCARD: GSM auth - RAND", _rand, 16);
 	if (scard->sim_type == SCARD_GSM_SIM) {
 		cmdlen = 5 + 16;
-		os_memcpy(cmd + 5, _rand, 16);
+		memcpy(cmd + 5, _rand, 16);
 	} else {
 		cmdlen = 5 + 1 + 16;
 		cmd[0] = USIM_CLA;
 		cmd[3] = 0x80;
 		cmd[4] = 17;
 		cmd[5] = 16;
-		os_memcpy(cmd + 6, _rand, 16);
+		memcpy(cmd + 6, _rand, 16);
 	}
 	len = sizeof(resp);
 	ret = scard_transmit(scard, cmd, cmdlen, resp, &len);
@@ -1091,8 +1091,8 @@ int scard_gsm_auth(struct scard_data *scard, const unsigned char *_rand,
 				   (long) len);
 			return -5;
 		}
-		os_memcpy(sres, buf, 4);
-		os_memcpy(kc, buf + 4, 8);
+		memcpy(sres, buf, 4);
+		memcpy(kc, buf + 4, 8);
 	} else {
 		if (len != 1 + 4 + 1 + 8 + 2) {
 			wpa_printf(MSG_WARNING, "SCARD: unexpected data "
@@ -1105,8 +1105,8 @@ int scard_gsm_auth(struct scard_data *scard, const unsigned char *_rand,
 				   "length (%d %d, expected 4 8)",
 				   buf[0], buf[5]);
 		}
-		os_memcpy(sres, buf + 1, 4);
-		os_memcpy(kc, buf + 6, 8);
+		memcpy(sres, buf + 1, 4);
+		memcpy(kc, buf + 6, 8);
 	}
 
 	wpa_hexdump(MSG_DEBUG, "SCARD: GSM auth - SRES", sres, 4);
@@ -1160,9 +1160,9 @@ int scard_umts_auth(struct scard_data *scard, const unsigned char *_rand,
 	wpa_hexdump(MSG_DEBUG, "SCARD: UMTS auth - RAND", _rand, AKA_RAND_LEN);
 	wpa_hexdump(MSG_DEBUG, "SCARD: UMTS auth - AUTN", autn, AKA_AUTN_LEN);
 	cmd[5] = AKA_RAND_LEN;
-	os_memcpy(cmd + 6, _rand, AKA_RAND_LEN);
+	memcpy(cmd + 6, _rand, AKA_RAND_LEN);
 	cmd[6 + AKA_RAND_LEN] = AKA_AUTN_LEN;
-	os_memcpy(cmd + 6 + AKA_RAND_LEN + 1, autn, AKA_AUTN_LEN);
+	memcpy(cmd + 6 + AKA_RAND_LEN + 1, autn, AKA_AUTN_LEN);
 
 	len = sizeof(resp);
 	ret = scard_transmit(scard, cmd, sizeof(cmd), resp, &len);
@@ -1193,7 +1193,7 @@ int scard_umts_auth(struct scard_data *scard, const unsigned char *_rand,
 	if (len >= 2 + AKA_AUTS_LEN && buf[0] == 0xdc &&
 	    buf[1] == AKA_AUTS_LEN) {
 		wpa_printf(MSG_DEBUG, "SCARD: UMTS Synchronization-Failure");
-		os_memcpy(auts, buf + 2, AKA_AUTS_LEN);
+		memcpy(auts, buf + 2, AKA_AUTS_LEN);
 		wpa_hexdump(MSG_DEBUG, "SCARD: AUTS", auts, AKA_AUTS_LEN);
 		return -2;
 	} else if (len >= 6 + IK_LEN + CK_LEN && buf[0] == 0xdb) {
@@ -1206,7 +1206,7 @@ int scard_umts_auth(struct scard_data *scard, const unsigned char *_rand,
 			return -1;
 		}
 		*res_len = *pos++;
-		os_memcpy(res, pos, *res_len);
+		memcpy(res, pos, *res_len);
 		pos += *res_len;
 		wpa_hexdump(MSG_DEBUG, "SCARD: RES", res, *res_len);
 
@@ -1216,7 +1216,7 @@ int scard_umts_auth(struct scard_data *scard, const unsigned char *_rand,
 			return -1;
 		}
 		pos++;
-		os_memcpy(ck, pos, CK_LEN);
+		memcpy(ck, pos, CK_LEN);
 		pos += CK_LEN;
 		wpa_hexdump(MSG_DEBUG, "SCARD: CK", ck, CK_LEN);
 
@@ -1226,7 +1226,7 @@ int scard_umts_auth(struct scard_data *scard, const unsigned char *_rand,
 			return -1;
 		}
 		pos++;
-		os_memcpy(ik, pos, IK_LEN);
+		memcpy(ik, pos, IK_LEN);
 		pos += IK_LEN;
 		wpa_hexdump(MSG_DEBUG, "SCARD: IK", ik, IK_LEN);
 

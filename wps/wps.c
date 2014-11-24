@@ -39,10 +39,10 @@ struct wps_data * wps_init(const struct wps_config *cfg)
 	data->wps = cfg->wps;
 	data->registrar = cfg->registrar;
 	if (cfg->registrar) {
-		os_memcpy(data->uuid_r, cfg->wps->uuid, WPS_UUID_LEN);
+		memcpy(data->uuid_r, cfg->wps->uuid, WPS_UUID_LEN);
 	} else {
-		os_memcpy(data->mac_addr_e, cfg->wps->dev.mac_addr, ETH_ALEN);
-		os_memcpy(data->uuid_e, cfg->wps->uuid, WPS_UUID_LEN);
+		memcpy(data->mac_addr_e, cfg->wps->dev.mac_addr, ETH_ALEN);
+		memcpy(data->uuid_e, cfg->wps->uuid, WPS_UUID_LEN);
 	}
 	if (cfg->pin) {
 		data->dev_pw_id = data->wps->oob_dev_pw_id == 0 ?
@@ -52,7 +52,7 @@ struct wps_data * wps_init(const struct wps_config *cfg)
 			os_free(data);
 			return NULL;
 		}
-		os_memcpy(data->dev_password, cfg->pin, cfg->pin_len);
+		memcpy(data->dev_password, cfg->pin, cfg->pin_len);
 		data->dev_password_len = cfg->pin_len;
 	}
 
@@ -97,12 +97,12 @@ struct wps_data * wps_init(const struct wps_config *cfg)
 			os_free(data);
 			return NULL;
 		}
-		os_memcpy(data->new_ap_settings, cfg->new_ap_settings,
+		memcpy(data->new_ap_settings, cfg->new_ap_settings,
 			  sizeof(*data->new_ap_settings));
 	}
 
 	if (cfg->peer_addr)
-		os_memcpy(data->peer_dev.mac_addr, cfg->peer_addr, ETH_ALEN);
+		memcpy(data->peer_dev.mac_addr, cfg->peer_addr, ETH_ALEN);
 
 	data->use_psk_key = cfg->use_psk_key;
 

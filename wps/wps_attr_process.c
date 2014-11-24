@@ -116,7 +116,7 @@ static int wps_process_cred_ssid(struct wps_credential *cred, const u8 *ssid,
 
 	wpa_hexdump_ascii(MSG_DEBUG, "WPS: SSID", ssid, ssid_len);
 	if (ssid_len <= sizeof(cred->ssid)) {
-		os_memcpy(cred->ssid, ssid, ssid_len);
+		memcpy(cred->ssid, ssid, ssid_len);
 		cred->ssid_len = ssid_len;
 	}
 
@@ -189,7 +189,7 @@ static int wps_process_cred_network_key(struct wps_credential *cred,
 
 	wpa_hexdump_key(MSG_DEBUG, "WPS: Network Key", key, key_len);
 	if (key_len <= sizeof(cred->key)) {
-		os_memcpy(cred->key, key, key_len);
+		memcpy(cred->key, key, key_len);
 		cred->key_len = key_len;
 	}
 
@@ -207,7 +207,7 @@ static int wps_process_cred_mac_addr(struct wps_credential *cred,
 	}
 
 	wpa_printf(MSG_DEBUG, "WPS: MAC Address " MACSTR, MAC2STR(mac_addr));
-	os_memcpy(cred->mac_addr, mac_addr, ETH_ALEN);
+	memcpy(cred->mac_addr, mac_addr, ETH_ALEN);
 
 	return 0;
 }

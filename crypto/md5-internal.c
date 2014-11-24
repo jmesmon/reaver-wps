@@ -122,10 +122,10 @@ void MD5Update(struct MD5Context *ctx, unsigned char const *buf, unsigned len)
 
 	t = 64 - t;
 	if (len < t) {
-	    os_memcpy(p, buf, len);
+	    memcpy(p, buf, len);
 	    return;
 	}
-	os_memcpy(p, buf, t);
+	memcpy(p, buf, t);
 	byteReverse(ctx->in, 16);
 	MD5Transform(ctx->buf, (u32 *) ctx->in);
 	buf += t;
@@ -134,7 +134,7 @@ void MD5Update(struct MD5Context *ctx, unsigned char const *buf, unsigned len)
     /* Process data in 64-byte chunks */
 
     while (len >= 64) {
-	os_memcpy(ctx->in, buf, 64);
+	memcpy(ctx->in, buf, 64);
 	byteReverse(ctx->in, 16);
 	MD5Transform(ctx->buf, (u32 *) ctx->in);
 	buf += 64;
@@ -143,7 +143,7 @@ void MD5Update(struct MD5Context *ctx, unsigned char const *buf, unsigned len)
 
     /* Handle any remaining bytes of data. */
 
-    os_memcpy(ctx->in, buf, len);
+    memcpy(ctx->in, buf, len);
 }
 
 static void encode_le32(uint8_t *buf, uint32_t val)
@@ -198,7 +198,7 @@ void MD5Final(unsigned char digest[16], struct MD5Context *ctx)
 
     MD5Transform(ctx->buf, (u32 *) ctx->in);
     byteReverse((unsigned char *) ctx->buf, 4);
-    os_memcpy(digest, ctx->buf, 16);
+    memcpy(digest, ctx->buf, 16);
 }
 
 /* The four core functions - F1 is optimized somewhat */
