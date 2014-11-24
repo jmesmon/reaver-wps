@@ -220,7 +220,7 @@ int is_wps_locked()
 }
 
 /* Deauths and re-associates a MAC address with the AP. Returns 0 on failure, 1 for success. */
-int reassociate()
+int reassociate(void)
 {
 	int tries = 0, retval = 0;
 
@@ -271,7 +271,7 @@ int reassociate()
 }
 
 /* Deauthenticate ourselves from the AP */
-void deauthenticate()
+void deauthenticate(void)
 {
 	const void *radio_tap = NULL, *dot11_frame = NULL, *packet = NULL;
 	size_t radio_tap_len = 0, dot11_frame_len = 0, packet_len = 0;
@@ -304,7 +304,7 @@ void deauthenticate()
 }
 
 /* Authenticate ourselves with the AP */
-void authenticate()
+void authenticate(void)
 {
 	const void *radio_tap = NULL, *dot11_frame = NULL, *management_frame = NULL, *packet = NULL;
 	size_t radio_tap_len = 0, dot11_frame_len = 0, management_frame_len = 0, packet_len = 0;
@@ -339,7 +339,7 @@ void authenticate()
 }
 
 /* Associate with the AP */
-void associate()
+void associate(void)
 {
 	const void *radio_tap = NULL, *dot11_frame = NULL, *management_frame = NULL, *ssid_tag = NULL, *wps_tag = NULL, *rates_tag = NULL, *packet = NULL;
         size_t radio_tap_len = 0, dot11_frame_len = 0, management_frame_len = 0, ssid_tag_len = 0, wps_tag_len = 0, rates_tag_len = 0, packet_len = 0, offset = 0;
