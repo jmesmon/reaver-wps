@@ -13,7 +13,7 @@ obj-common = $(obj-wps) $(obj-utils) crypto/libcrypto.a tls/libtls.a		\
 
 obj-reaver = $(obj-common) wpscrack.o
 obj-wash   = $(obj-common) wpsmon.o
-TARGETS = reaver wash
+TARGETS_BIN = reaver wash
 
 SQLITE3_CFLAGS  =
 SQLITE3_LDFLAGS = -lsqlite3
