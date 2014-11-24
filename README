@@ -1,12 +1,12 @@
 TODO:
 	remove unused source files
-	flatten build system (get rid of sub-makes)
 	make CONF_DIR runtime configurable. Default to somewhere in $HOME.
 	Fix all the warnings/errors
 	Switch internal code to common external libs
 		- bignum -> gmp
 		- tommath excerpt to libtommath
-		- ...
+		- crypto/ is extracted from wps_supplicant, look at using
+		  wpa_supplicant in a submodule.
 
 	use ccan instead of some of the stuff in utils/ and wpa/wpabuf
 
