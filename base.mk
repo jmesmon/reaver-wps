@@ -1,4 +1,4 @@
-## base.mk: 799083f+, see https://github.com/jmesmon/trifles.git
+## base.mk: 1f8b8c6, see https://github.com/jmesmon/trifles.git
 # Usage:
 #
 # == Targets ==
@@ -74,17 +74,17 @@
 # $(ldflags-some-variant)
 # $(ldflags-some-variant/some-target)
 #
-# $(cflags-some-object-without-suffix)
+# $(cflags-some-object)
 # $(cflags-some-variant)
-# $(cflags-some-variant/some-object-without-suffix)
+# $(cflags-some-variant/some-object)
 #
-# $(cxxflags-some-object-without-suffix)
+# $(cxxflags-some-object)
 # $(cxxflags-some-variant)
-# $(cxxflags-some-variant/some-object-without-suffix)
+# $(cxxflags-some-variant/some-object)
 #
-# $(asflags-some-object-without-suffix)
+# $(asflags-some-object)
 # $(asflags-some-variant)
-# $(asflags-some-variant/some-object-without-suffix)
+# $(asflags-some-variant/some-object)
 #
 # OBJ_TRASH		$(1) expands to the object. Expanded for every object.
 # TARGET_TRASH		$* expands to the target. Expanded for every target.
@@ -439,13 +439,13 @@ $2/%.ll.c: %.l
 	$$(QUIET_FLEX)$$(FLEX) -P '$$(parser-prefix)' --bison-locations --bison-bridge -o $$@ $$<
 
 $2/%.o: %.c $2/.TRACK-CFLAGS
-	$$(QUIET_CC)$$(CC) $$(dep-gen) -c -o $$@ $$< $$(ALL_CFLAGS) $$(cflags-$$*) $$(cflags-$1) $$(cflags-$1/$$*)
+	$$(QUIET_CC)$$(CC) $$(dep-gen) -c -o $$@ $$< $$(ALL_CFLAGS) $$(cflags-$$@) $$(cflags-$1) $$(cflags-$1/$$@)
 
 $2/%.o: %.cc $2/.TRACK-CXXFLAGS
-	$$(QUIET_CXX)$$(CXX) $$(dep-gen) -c -o $$@ $$< $$(ALL_CXXFLAGS) $$(cxxflags-$$*) $$(cxxflags-$1) $$(cxxflags-$1/$$*)
+	$$(QUIET_CXX)$$(CXX) $$(dep-gen) -c -o $$@ $$< $$(ALL_CXXFLAGS) $$(cxxflags-$$@) $$(cxxflags-$1) $$(cxxflags-$1/$$@)
 
 $2/%.o: %.S $2/.TRACK-ASFLAGS
-	$$(QUIET_AS)$$(AS) -c $$(ALL_ASFLAGS) $$< -o $$@ $$(asflags-$$*) $$(asflags-$1) $$(asflags-$1/$$*)
+	$$(QUIET_AS)$$(AS) -c $$(ALL_ASFLAGS) $$< -o $$@ $$(asflags-$$@) $$(asflags-$1) $$(asflags-$1/$$@)
 
 
 $(call debug,ON_EACH_VARIANT $(ON_EACH_VARIANT) +++)
