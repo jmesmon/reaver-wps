@@ -100,10 +100,10 @@ struct wps_data *initialize_wps_data()
 		/* Report that we are a Windows 7 registrar, if --win7 was specified on the command line */
 		if(wps->wps && get_win7_compat())
 		{
-			wps->wps->dev.device_name = WPS_DEVICE_NAME;
-			wps->wps->dev.manufacturer = WPS_MANUFACTURER;
-			wps->wps->dev.model_name = WPS_MODEL_NAME;
-			wps->wps->dev.model_number = WPS_MODEL_NUMBER;
+			wps->wps->dev.device_name = strdup(WPS_DEVICE_NAME);
+			wps->wps->dev.manufacturer = strdup(WPS_MANUFACTURER);
+			wps->wps->dev.model_name = strdup(WPS_MODEL_NAME);
+			wps->wps->dev.model_number = strdup(WPS_MODEL_NUMBER);
 			memcpy(wps->wps->dev.pri_dev_type, WPS_DEVICE_TYPE, WPS_DEV_TYPE_LEN);
 			memcpy((void *) &wps->wps->dev.os_version, WPS_OS_VERSION, 4);
 			wps->wps->dev.rf_bands = WPS_RF_BANDS;
