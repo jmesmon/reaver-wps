@@ -33,6 +33,16 @@
 
 #include "send.h"
 
+#include "defs.h"
+#include "globule.h"
+#include "builder.h"
+#include "sigalrm.h"
+#include "misc.h"
+
+#define WFA_REGISTRAR "WFA-SimpleConfig-Registrar-1-0"
+static int resend_packet(void);
+static int send_packet(const void *packet, size_t len);
+
 /* Initiate the WPS session with an EAPOL START packet */
 int send_eapol_start(void)
 {
@@ -166,7 +176,7 @@ void send_wsc_nack(void)
  * All transmissions are handled here to ensure that the receive timer 
  * is always started immediately after a packet is transmitted.
  */
-int send_packet(const void *packet, size_t len)
+static int send_packet(const void *packet, size_t len)
 {
 	int ret_val = 0;
 
@@ -182,7 +192,7 @@ int send_packet(const void *packet, size_t len)
 }
 
 /* Retransmit the last packet */
-int resend_packet()
+static int resend_packet(void)
 {
 	void * packet;
 	int len;

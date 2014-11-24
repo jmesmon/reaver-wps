@@ -32,6 +32,7 @@
  */
 
 #include "exchange.h"
+#include "sigalrm.h" /* stop_timer() */
 
 /* Main loop to listen for packets on a wireless card in monitor mode. */
 enum wps_result do_wps_exchange(void)

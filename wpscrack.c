@@ -33,7 +33,7 @@
 
 #include "config.h"
 #include "wpscrack.h"
-
+#include "sigalrm.h"
 int main(int argc, char **argv)
 {
 	int ret_val = EXIT_FAILURE;
